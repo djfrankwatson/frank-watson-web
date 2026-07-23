@@ -8,10 +8,17 @@
 <meta property="og:title" content="Frank Watson — Trance DJ &amp; Producer" />
 <meta property="og:description" content="Belgian trance DJ &amp; producer. Trance is a mood." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<!-- Fonts are self-hosted locally (no external requests to Google) -->
+<link rel="preload" href="fonts/oswald-700.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
 <style>
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/oswald-400.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/oswald-500.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/oswald-600.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/oswald-700.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/inter-400.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/inter-500.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/inter-600.woff2') format('woff2')}
   :root{
     --bg:#07040d; --bg2:#120a1e; --card:#170e26;
     --purple:#a855f7; --purple2:#7c3aed; --magenta:#c026d3; --cyan:#22d3ee;
@@ -206,13 +213,15 @@
     <div class="eyebrow">Music</div>
     <h2>Listen</h2>
     <p style="color:var(--muted);max-width:660px;margin:-6px 0 26px;font-size:16px">New episodes of <strong style="color:var(--text)">What's On Air</strong> and <strong style="color:var(--text)">World of Tranceptum</strong>, plus my latest sets — streaming on SoundCloud &amp; Mixcloud.</p>
-    <div class="embed-frame">
+    <div class="embed-frame consent-embed">
       <iframe width="100%" height="320" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
-        src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fdj_frank_watson&color=%23a855f7&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+        data-src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fdj_frank_watson&color=%23a855f7&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+      <div class="consent-cover"><p>The SoundCloud player is blocked until you accept cookies.</p><div class="cc-btns"><button type="button" class="btn ghost consent-accept">Accept &amp; load</button><a class="btn ghost" href="https://soundcloud.com/dj_frank_watson" target="_blank" rel="noopener">Open on SoundCloud</a></div></div>
     </div>
-    <div class="embed-frame">
+    <div class="embed-frame consent-embed">
       <iframe width="100%" height="180" frameborder="0" loading="lazy"
-        src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&light=0&feed=%2FDJ_Frank_Watson%2F"></iframe>
+        data-src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&light=0&feed=%2FDJ_Frank_Watson%2F"></iframe>
+      <div class="consent-cover"><p>The Mixcloud player is blocked until you accept cookies.</p><div class="cc-btns"><button type="button" class="btn ghost consent-accept">Accept &amp; load</button><a class="btn ghost" href="https://www.mixcloud.com/DJ_Frank_Watson/" target="_blank" rel="noopener">Open on Mixcloud</a></div></div>
     </div>
     <div class="cta" style="justify-content:flex-start;margin-top:6px">
       <a class="btn ghost" href="https://soundcloud.com/dj_frank_watson" target="_blank" rel="noopener">SoundCloud</a>
@@ -291,8 +300,32 @@
   </div>
   <div class="brand" style="font-family:'Oswald';letter-spacing:.16em;color:var(--text);margin-bottom:6px">FRANK WATSON</div>
   <div>© <span id="yr"></span> Frank Watson — trance DJ &amp; producer · Belgium</div>
-  <div class="tiny">Trance is a mood.</div>
+  <div class="tiny">Trance is a mood. · <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy</a> · <span class="cookie-link" id="cookie-settings">Cookie settings</span></div>
 </footer>
+
+<div id="cookie" hidden>
+  <div class="cookie-inner">
+    <div class="cookie-txt">
+      <strong>Cookies &amp; players</strong>
+      This site embeds players from SoundCloud &amp; Mixcloud that may set cookies once loaded. No analytics or tracking cookies are used. Read the <a href="#" id="cookie-policy-link">cookie policy</a>.
+    </div>
+    <div class="cookie-btns">
+      <button type="button" class="btn ghost" id="cookie-decline">Decline</button>
+      <button type="button" class="btn primary" id="cookie-accept">Accept</button>
+    </div>
+  </div>
+</div>
+<div id="cookie-modal" hidden>
+  <div class="cm-box">
+    <h3>Cookie &amp; privacy notice</h3>
+    <p>This website is intentionally minimal and does <b>not</b> use analytics, advertising or tracking cookies, and does not profile visitors.</p>
+    <p><b>Embedded players.</b> The Music section can embed players from <b>SoundCloud</b> and <b>Mixcloud</b>. When loaded, those third parties may set their own cookies and receive your IP address under their own privacy policies — which is why the players stay blocked until you press <b>Accept</b>.</p>
+    <p><b>Your choice.</b> "Decline" keeps the players blocked and stores only a small technical preference in your browser (local storage) so we remember your choice. You can change or withdraw it anytime via "Cookie settings" in the footer.</p>
+    <p><b>Booking e-mail.</b> If you contact us by e-mail, your message is used only to reply to your request.</p>
+    <p>Questions? <a href="mailto:ccrs@telenet.be" style="color:var(--purple)">ccrs@telenet.be</a> · <a href="privacy.html" style="color:var(--purple)">Full privacy policy</a></p>
+    <button type="button" class="btn primary cm-close" id="cm-close">Got it</button>
+  </div>
+</div>
 
 <script>
   document.getElementById('yr').textContent=new Date().getFullYear();
@@ -339,6 +372,31 @@
   @keyframes ldbar{to{width:100%}}
   .ld-txt{font-family:'Oswald';letter-spacing:.35em;font-size:12px;color:var(--muted);text-transform:uppercase}
   @media(prefers-reduced-motion:reduce){.ld-logo,.ld-eq i,.ld-bar span{animation:none}.ld-bar span{width:100%}}
+
+  /* cookie consent */
+  .consent-embed{position:relative}
+  .consent-cover{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;
+    background:linear-gradient(180deg,#170d29,#0c0716);border-radius:14px;color:var(--muted)}
+  .consent-cover p{max-width:420px;margin:0 0 14px;font-size:14px}
+  .cc-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .cc-btns .btn{padding:11px 20px;font-size:13px}
+  #cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:120;max-width:840px;margin:0 auto;
+    background:rgba(18,10,30,.97);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;
+    box-shadow:0 18px 50px rgba(0,0,0,.55);padding:18px 20px}
+  #cookie[hidden]{display:none}
+  .cookie-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:space-between}
+  .cookie-txt{font-size:14px;color:var(--muted);flex:1;min-width:240px;line-height:1.5}
+  .cookie-txt strong{display:block;color:var(--text);font-family:'Oswald';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+  .cookie-txt a{color:var(--purple);text-decoration:underline}
+  .cookie-btns{display:flex;gap:10px;flex-wrap:wrap}
+  .cookie-btns .btn{padding:12px 26px;font-size:13px}
+  #cookie-modal{position:fixed;inset:0;z-index:130;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+  #cookie-modal[hidden]{display:none}
+  .cm-box{max-width:560px;background:#140a20;border:1px solid var(--line);border-radius:16px;padding:26px;color:var(--muted);font-size:14px;line-height:1.55;max-height:82vh;overflow:auto}
+  .cm-box h3{font-family:'Oswald';color:var(--text);text-transform:uppercase;margin-bottom:12px}
+  .cm-box p{margin-bottom:10px}.cm-box b{color:var(--text)}
+  .cm-close{margin-top:14px}
+  .cookie-link{color:var(--muted);text-decoration:underline;cursor:pointer}
 </style>
 <script>
 (function(){
@@ -384,6 +442,25 @@
       b.addEventListener('pointerleave',function(){b.style.transform='';});
     });
   }
+
+  // cookie consent — gate SoundCloud/Mixcloud embeds until opt-in
+  (function(){
+    var KEY='fw_consent',banner=document.getElementById('cookie');
+    function loadEmbeds(){document.querySelectorAll('iframe[data-src]').forEach(function(f){var d=f.getAttribute('data-src');if(d)f.src=d;});document.querySelectorAll('.consent-cover').forEach(function(c){c.style.display='none';});}
+    function get(){try{return localStorage.getItem(KEY);}catch(e){return null;}}
+    function set(v){try{localStorage.setItem(KEY,v);}catch(e){}if(banner)banner.hidden=true;if(v==='accepted')loadEmbeds();}
+    var v=get();
+    if(v==='accepted')loadEmbeds();
+    else if(v!=='declined'&&banner)banner.hidden=false;
+    var a=document.getElementById('cookie-accept');if(a)a.onclick=function(){set('accepted');};
+    var d=document.getElementById('cookie-decline');if(d)d.onclick=function(){set('declined');};
+    document.querySelectorAll('.consent-accept').forEach(function(b){b.onclick=function(){set('accepted');};});
+    var s=document.getElementById('cookie-settings');if(s)s.onclick=function(){if(banner)banner.hidden=false;};
+    var m=document.getElementById('cookie-modal'),pl=document.getElementById('cookie-policy-link');
+    if(pl&&m)pl.onclick=function(e){e.preventDefault();m.hidden=false;};
+    var mc=document.getElementById('cm-close');if(mc&&m)mc.onclick=function(){m.hidden=true;};
+    if(m)m.addEventListener('click',function(e){if(e.target===m)m.hidden=true;});
+  })();
 })();
 </script>
 </body>
