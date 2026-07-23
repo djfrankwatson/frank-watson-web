@@ -145,6 +145,8 @@
 <body>
 <div id="bar"></div>
 <div id="glow" aria-hidden="true"></div>
+<canvas id="trail" aria-hidden="true"></canvas>
+<canvas id="confetti" aria-hidden="true"></canvas>
 
 <div id="loader">
   <div class="ld-inner">
@@ -168,6 +170,7 @@
 </header>
 
 <section class="hero" id="top">
+  <canvas id="shader" aria-hidden="true"></canvas>
   <canvas id="fx" aria-hidden="true"></canvas>
   <div class="grid" aria-hidden="true"></div>
   <div class="inner wrap">
@@ -180,6 +183,7 @@
       <a href="#contact" class="btn ghost">Book Frank</a>
     </div>
   </div>
+  <div class="viz" id="viz" aria-hidden="true"></div>
   <div class="scrolldot">↓ scroll</div>
 </section>
 
@@ -461,6 +465,107 @@
     var mc=document.getElementById('cm-close');if(mc&&m)mc.onclick=function(){m.hidden=true;};
     if(m)m.addEventListener('click',function(e){if(e.target===m)m.hidden=true;});
   })();
+})();
+</script>
+
+<style>
+  /* flashy level 2 */
+  #shader{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  #trail,#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+  #trail{z-index:41;mix-blend-mode:screen}
+  #confetti{z-index:150}
+  .viz{position:absolute;left:0;right:0;bottom:0;height:70px;z-index:1;display:flex;align-items:flex-end;gap:3px;padding:0 6px;opacity:.75;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+  .viz i{flex:1;height:8%;border-radius:3px 3px 0 0;background:linear-gradient(var(--magenta),var(--purple2));box-shadow:0 0 8px rgba(168,85,247,.5)}
+  .btn{position:relative;overflow:hidden}
+  .btn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;
+    background:radial-gradient(120px circle at var(--bx,50%) var(--by,-40%),rgba(255,255,255,.4),transparent 55%)}
+  .btn:hover::after{opacity:1}
+  .rel{transition:transform .12s ease, background .2s}
+  @media(hover:none){#trail{display:none}}
+  @media(prefers-reduced-motion:reduce){#shader,#trail,#confetti,.viz{display:none}}
+</style>
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches, touch=matchMedia('(hover:none)').matches;
+
+  // 1. WebGL liquid-neon shader background
+  (function(){
+    if(reduce) return;
+    var c=document.getElementById('shader'); if(!c) return;
+    var gl=c.getContext('webgl')||c.getContext('experimental-webgl'); if(!gl){c.style.display='none';return;}
+    var vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}';
+    var fs='precision mediump float;uniform vec2 r;uniform float t;'+
+      'void main(){vec2 uv=gl_FragCoord.xy/r.xy;vec2 q=uv*3.0;float ti=t*0.12;'+
+      'float v=sin(q.x*1.5+ti)+sin(q.y*1.7-ti*1.1)+sin((q.x+q.y)*1.2+ti*0.7)+sin(length(q-1.5)*2.0-ti);'+
+      'v*=0.25;float m=0.5+0.5*v;'+
+      'vec3 c1=vec3(0.24,0.07,0.45);vec3 c2=vec3(0.7,0.14,0.8);vec3 c3=vec3(0.12,0.8,0.9);'+
+      'vec3 col=mix(c1,c2,smoothstep(0.2,0.75,m));col=mix(col,c3,smoothstep(0.75,1.0,m)*0.55);'+
+      'float vig=clamp(0.28+1.0*length(uv-0.5),0.0,1.0);col*=vig;col*=0.62;'+
+      'gl_FragColor=vec4(col,1.0);}';
+    function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+    var prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,vs));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){c.style.display='none';return;}
+    gl.useProgram(prog);
+    var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var pl=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(pl);gl.vertexAttribPointer(pl,2,gl.FLOAT,false,0,0);
+    var ur=gl.getUniformLocation(prog,'r'),ut=gl.getUniformLocation(prog,'t');
+    function size(){var b=c.getBoundingClientRect();var dpr=Math.min(window.devicePixelRatio||1,1.5);c.width=Math.max(1,b.width*dpr|0);c.height=Math.max(1,b.height*dpr|0);gl.viewport(0,0,c.width,c.height);}
+    size();addEventListener('resize',size,{passive:true});
+    var t0=performance.now();
+    (function loop(now){gl.uniform2f(ur,c.width,c.height);gl.uniform1f(ut,(now-t0)/1000);gl.drawArrays(gl.TRIANGLES,0,3);requestAnimationFrame(loop);})(t0);
+  })();
+
+  // 2. text scramble on section titles
+  (function(){
+    if(reduce) return;
+    var chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*/';
+    function scramble(el){var f=el.dataset.f||(el.dataset.f=el.textContent),s=performance.now(),tot=650+f.length*28;
+      (function tick(now){var p=(now-s)/tot,o='';for(var i=0;i<f.length;i++){var ch=f[i];if(ch===' '){o+=' ';continue;}o+=(p>=(i+1)/f.length)?ch:chars[(Math.random()*chars.length)|0];}el.textContent=o;if(p<1)requestAnimationFrame(tick);else el.textContent=f;})(s);}
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){scramble(e.target);io.unobserve(e.target);}});},{threshold:.5});
+    document.querySelectorAll('section h2').forEach(function(h){io.observe(h);});
+  })();
+
+  // 3. cursor trail
+  (function(){
+    if(reduce||touch) return;
+    var c=document.getElementById('trail'); if(!c) return; var ctx=c.getContext('2d'),pts=[];
+    function size(){c.width=innerWidth;c.height=innerHeight;} size(); addEventListener('resize',size,{passive:true});
+    addEventListener('pointermove',function(e){pts.push({x:e.clientX,y:e.clientY,l:1});if(pts.length>44)pts.shift();},{passive:true});
+    (function loop(){ctx.clearRect(0,0,c.width,c.height);for(var i=0;i<pts.length;i++){var p=pts[i];p.l-=0.03;if(p.l<=0)continue;ctx.beginPath();ctx.arc(p.x,p.y,7*p.l,0,6.2832);ctx.fillStyle='rgba(192,60,240,'+(p.l*0.5)+')';ctx.shadowBlur=14;ctx.shadowColor='rgba(168,85,247,.8)';ctx.fill();}pts=pts.filter(function(p){return p.l>0;});requestAnimationFrame(loop);})();
+  })();
+
+  // 4. visualizer bars
+  (function(){
+    if(reduce) return;
+    var v=document.getElementById('viz'); if(!v) return; var N=52,bars=[],i;
+    for(i=0;i<N;i++){var b=document.createElement('i');v.appendChild(b);bars.push(b);}
+    var t=0;
+    (function loop(){t+=0.05;for(i=0;i<N;i++){var h=0.2+0.4*(Math.sin(i*0.5+t)*0.5+0.5)+0.35*(Math.sin(i*0.13-t*1.7)*0.5+0.5);bars[i].style.height=(8+h*56)+'px';}requestAnimationFrame(loop);})();
+  })();
+
+  // 5. confetti
+  var confettiBurst=(function(){
+    var c=document.getElementById('confetti'); if(!c) return function(){};
+    var ctx=c.getContext('2d'),ps=[],raf=null,cols=['#a855f7','#c026d3','#22d3ee','#ffffff','#7c3aed'];
+    function size(){c.width=innerWidth;c.height=innerHeight;} size(); addEventListener('resize',size,{passive:true});
+    function loop(){ctx.clearRect(0,0,c.width,c.height);for(var i=0;i<ps.length;i++){var p=ps[i];p.vy+=0.15;p.x+=p.vx;p.y+=p.vy;p.a-=0.012;p.rot+=p.vr;if(p.a<=0)continue;ctx.save();ctx.globalAlpha=Math.max(0,p.a);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);ctx.restore();}ps=ps.filter(function(p){return p.a>0&&p.y<c.height+40;});if(ps.length)raf=requestAnimationFrame(loop);else raf=null;}
+    return function(x,y){if(reduce)return;for(var i=0;i<90;i++){var a=Math.random()*6.2832,sp=3+Math.random()*7;ps.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-4,s:5+Math.random()*6,c:cols[(Math.random()*cols.length)|0],a:1,rot:Math.random()*6.28,vr:(Math.random()-0.5)*0.3});}if(!raf)raf=requestAnimationFrame(loop);};
+  })();
+  function hookConfetti(el){if(el)el.addEventListener('click',function(e){confettiBurst(e.clientX,e.clientY);});}
+  hookConfetti(document.getElementById('cookie-accept'));
+  document.querySelectorAll('a[href^="mailto:ccrs"], .cta a.ghost[href="#contact"]').forEach(hookConfetti);
+
+  // 6. discography tilt + button spotlight
+  if(!touch){
+    document.querySelectorAll('.rel').forEach(function(r){
+      r.addEventListener('pointermove',function(e){var b=r.getBoundingClientRect();var rx=((e.clientY-b.top)/b.height-0.5)*-6;var ry=((e.clientX-b.left)/b.width-0.5)*6;r.style.transform='perspective(600px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';});
+      r.addEventListener('pointerleave',function(){r.style.transform='';});
+    });
+    document.querySelectorAll('.btn').forEach(function(b){
+      b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();b.style.setProperty('--bx',(e.clientX-r.left)+'px');b.style.setProperty('--by',(e.clientY-r.top)+'px');});
+    });
+  }
 })();
 </script>
 </body>
