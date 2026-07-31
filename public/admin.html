@@ -149,6 +149,12 @@
   <main class="wrap">
     <div class="note" id="scopenote"></div>
 
+    <div class="card wide" id="gcpanel" style="margin-bottom:22px">
+      <h3>Site-wide statistics</h3>
+      <div class="hint" id="gchint"></div>
+      <div id="gcbody"></div>
+    </div>
+
     <div class="kpis" id="kpis"></div>
 
     <div class="grid">
@@ -402,6 +408,50 @@
     svg.innerHTML = out;
   }
 
+  /* ---------------- GoatCounter panel ---------------- */
+  // Reads the site code straight out of stats.js so there is only one
+  // place to configure it.
+  var GC_CODE = null;
+  function loadGoatCode(cb) {
+    if (GC_CODE !== null) { cb(GC_CODE); return; }
+    fetch('stats.js', { cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var m = t.match(/goatcounter\s*:\s*'([^']*)'/);
+        GC_CODE = m ? m[1].trim() : '';
+        cb(GC_CODE);
+      })
+      .catch(function () { GC_CODE = ''; cb(''); });
+  }
+
+  function renderGoat() {
+    loadGoatCode(function (code) {
+      var hint = $('gchint'), body = $('gcbody');
+      if (!code) {
+        hint.textContent = 'Not switched on yet — this is where your real visitor numbers will appear.';
+        body.innerHTML =
+          '<div style="font-size:13px;color:var(--muted);line-height:1.8">' +
+          '<b style="color:var(--text)">To switch it on:</b><br>' +
+          '1. Create a free account at <a href="https://www.goatcounter.com" target="_blank" rel="noopener">goatcounter.com</a> and choose a site code.<br>' +
+          '2. Open <code>stats.js</code>, put that code between the quotes on the <code>goatcounter:</code> line.<br>' +
+          '3. Re-upload <code>stats.js</code> to the <code>www</code> folder on Combell.<br><br>' +
+          'Numbers start appearing within a minute of the first visit. No cookies are set and no consent banner is required for it.' +
+          '</div>';
+        return;
+      }
+      var url = 'https://' + code + '.goatcounter.com';
+      hint.innerHTML = 'Live figures from every visitor, hosted at <b>' + esc(code) + '.goatcounter.com</b>.';
+      body.innerHTML =
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">' +
+        '<a class="btn ghost" href="' + url + '" target="_blank" rel="noopener">Open full dashboard ↗</a>' +
+        '<a class="btn ghost" href="' + url + '/settings/export" target="_blank" rel="noopener">Export data ↗</a>' +
+        '</div>' +
+        '<div style="font-size:12px;color:var(--muted)">Track clicks show up under <b>Events</b> as ' +
+        '<code>beatport-…</code> and <code>spotify-…</code>. If the dashboard asks you to log in, that is normal — ' +
+        'it is a separate account from this page.</div>';
+    });
+  }
+
   /* ---------------- main render ---------------- */
   var S = {};
   function render() {
@@ -429,9 +479,11 @@
     var ctr = sess ? Math.min(100, Math.round(storeClicks / sess * 100)) : 0;
     var best = inRange.map(function (k) { return [k, days[k].views]; }).sort(function (a, b) { return b[1] - a[1]; })[0];
 
-    $('scopenote').innerHTML = '<b>Scope:</b> these numbers come from this browser\'s local storage, so they cover visits made ' +
-      'on <b>this device</b>. To collect stats from every visitor, set <code>endpoint</code> in <code>stats.js</code> to your own ' +
-      'collector URL — the tracker will POST the same events there. Nothing is shared with third parties and no cookies are used.';
+    renderGoat();
+
+    $('scopenote').innerHTML = '<b>Scope:</b> everything below comes from this browser\'s own storage, so it covers visits made ' +
+      'on <b>this device only</b> — useful for testing, not for real audience numbers. For site-wide figures from every visitor, ' +
+      'use the GoatCounter panel above.';
 
     $('kpis').innerHTML = [
       ['Page views', views, n > 0 ? 'last ' + n + ' days' : 'all time'],
@@ -453,7 +505,8 @@
     var dev = sortObj(S.devices).concat(sortObj(S.browsers));
     bars('t-dev', dev, 'cy', 9);
 
-    var secNames = { hero: 'Hero', about: 'About', music: 'Music', disco: 'Discography', shows: 'Shows', contact: 'Contact' };
+    var secNames = { hero: 'Hero', top: 'Hero', about: 'About', music: 'Music', disco: 'Discography',
+                     radio: 'X-Ray FM sessions', shows: 'Shows', contact: 'Contact' };
     bars('t-sec', sortObj(S.sections).map(function (p) { return [secNames[p[0]] || p[0], p[1]]; }), '', 8);
 
     var out = sortObj(S.outbound);
