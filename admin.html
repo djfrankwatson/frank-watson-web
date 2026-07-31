@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin · Frank Watson</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+<style>
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/oswald-500.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/oswald-600.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/oswald-700.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/inter-400.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/inter-500.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/inter-600.woff2') format('woff2')}
+  :root{
+    --bg:#07040d; --bg2:#120a1e; --card:#170e26;
+    --purple:#a855f7; --purple2:#7c3aed; --magenta:#c026d3; --cyan:#22d3ee;
+    --text:#ece7f5; --muted:#a99fc0; --line:rgba(168,85,247,.24);
+    --green:#1ed760; --lime:#a5f70b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:
+      radial-gradient(1200px 600px at 15% -10%,rgba(124,58,237,.22),transparent 60%),
+      radial-gradient(900px 500px at 90% 0%,rgba(192,38,211,.16),transparent 60%),
+      var(--bg);
+    color:var(--text);line-height:1.6;min-height:100vh}
+  h1,h2,h3{font-family:'Oswald',sans-serif;letter-spacing:.02em;font-weight:700}
+  a{color:var(--purple);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+  /* ---------- login ---------- */
+  #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .gatebox{width:100%;max-width:380px;background:rgba(23,14,38,.85);border:1px solid var(--line);border-radius:20px;
+    padding:34px 28px;backdrop-filter:blur(14px);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .gatebox .eq{display:inline-flex;gap:3px;height:20px;align-items:flex-end;margin-bottom:16px}
+  .gatebox .eq i{width:4px;height:40%;background:linear-gradient(var(--cyan),var(--magenta));border-radius:2px;animation:eq .9s ease-in-out infinite}
+  .gatebox .eq i:nth-child(2){animation-delay:.15s}.gatebox .eq i:nth-child(3){animation-delay:.3s}
+  .gatebox .eq i:nth-child(4){animation-delay:.45s}.gatebox .eq i:nth-child(5){animation-delay:.6s}
+  @keyframes eq{0%,100%{height:25%}50%{height:100%}}
+  .gatebox h1{font-size:22px;text-transform:uppercase;letter-spacing:.14em}
+  .gatebox p{color:var(--muted);font-size:13px;margin:6px 0 22px}
+  input[type=password],input[type=text]{width:100%;padding:13px 16px;border-radius:12px;background:rgba(0,0,0,.35);
+    border:1px solid var(--line);color:var(--text);font-family:inherit;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+  input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(168,85,247,.18)}
+  .btn{font-family:'Oswald';text-transform:uppercase;letter-spacing:.13em;font-size:13px;font-weight:600;
+    padding:11px 22px;border-radius:30px;border:1px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .25s,background .2s,color .2s;
+    display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.primary{background:linear-gradient(90deg,var(--purple2),var(--magenta));color:#fff;box-shadow:0 8px 26px rgba(168,85,247,.35);width:100%;justify-content:center;margin-top:14px}
+  .btn.ghost{border-color:var(--line);color:var(--muted);background:rgba(255,255,255,.03)}
+  .btn.ghost:hover{color:var(--text);border-color:var(--purple);background:rgba(168,85,247,.12)}
+  .btn.danger:hover{color:#ff8080;border-color:rgba(255,90,90,.6);background:rgba(255,60,60,.1)}
+  .err{color:#ff7b7b;font-size:13px;margin-top:12px;min-height:18px}
+
+  /* ---------- shell ---------- */
+  #app{display:none}
+  .top{position:sticky;top:0;z-index:20;background:rgba(7,4,13,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .topin{display:flex;align-items:center;justify-content:space-between;gap:14px;height:66px;flex-wrap:wrap}
+  .brand{font-family:'Oswald';font-weight:700;letter-spacing:.16em;font-size:15px;text-transform:uppercase}
+  .brand span{color:var(--purple)}
+  .tools{display:flex;gap:8px;flex-wrap:wrap}
+  select{padding:9px 12px;border-radius:30px;background:rgba(0,0,0,.4);border:1px solid var(--line);color:var(--text);
+    font-family:'Oswald';font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;outline:none}
+
+  main{padding:28px 0 70px}
+  .note{background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.3);border-radius:14px;padding:14px 18px;
+    font-size:13px;color:var(--muted);margin-bottom:24px}
+  .note b{color:var(--cyan)}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:26px}
+  .kpi{background:linear-gradient(160deg,rgba(168,85,247,.12),rgba(23,14,38,.9));border:1px solid var(--line);
+    border-radius:18px;padding:18px 20px;position:relative;overflow:hidden}
+  .kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;
+    background:radial-gradient(circle,rgba(192,38,211,.28),transparent 70%)}
+  .kpi .lab{font-family:'Oswald';text-transform:uppercase;letter-spacing:.22em;font-size:10px;color:var(--purple)}
+  .kpi .val{font-family:'Oswald';font-weight:700;font-size:34px;line-height:1.1;margin-top:4px}
+  .kpi .sub{font-size:12px;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
+  .card{background:rgba(23,14,38,.7);border:1px solid var(--line);border-radius:18px;padding:20px}
+  .card.wide{grid-column:1/-1}
+  .card h3{font-size:14px;text-transform:uppercase;letter-spacing:.18em;margin-bottom:4px}
+  .card .hint{font-size:12px;color:var(--muted);margin-bottom:16px}
+
+  .bars{display:flex;flex-direction:column;gap:10px}
+  .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:13px}
+  .row .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .ct{font-family:'Oswald';font-weight:600;color:var(--muted);font-size:13px}
+  .track{grid-column:1/-1;height:7px;border-radius:6px;background:rgba(255,255,255,.06);overflow:hidden}
+  .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple2),var(--magenta));transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .fill.bp{background:linear-gradient(90deg,#6d9c00,var(--lime))}
+  .fill.sp{background:linear-gradient(90deg,#0e8f3f,var(--green))}
+  .fill.cy{background:linear-gradient(90deg,#0e7490,var(--cyan))}
+
+  .chart{width:100%;height:190px;display:block}
+  .chart .gl{stroke:rgba(255,255,255,.07);stroke-width:1}
+  .chart text{fill:var(--muted);font-size:9px;font-family:'Inter',sans-serif}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid rgba(168,85,247,.14)}
+  th{font-family:'Oswald';text-transform:uppercase;letter-spacing:.14em;font-size:10px;color:var(--purple);font-weight:600}
+  td.num{text-align:right;font-family:'Oswald';font-weight:600}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-family:'Oswald';letter-spacing:.1em;text-transform:uppercase}
+  .pill.bp{background:rgba(165,247,11,.15);color:var(--lime)}
+  .pill.sp{background:rgba(30,215,96,.15);color:var(--green)}
+  .empty{color:var(--muted);font-size:13px;font-style:italic;padding:14px 0}
+  .foot{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .foot .sp{flex:1}
+  .stamp{font-size:12px;color:var(--muted)}
+  @media(max-width:560px){.topin{height:auto;padding:12px 0}.kpi .val{font-size:28px}}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="gate">
+  <form class="gatebox" id="gateform">
+    <div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
+    <h1>Admin<span style="color:var(--purple)">.</span></h1>
+    <p>Frank Watson &mdash; site statistics</p>
+    <input type="password" id="pw" placeholder="Password" autocomplete="current-password" autofocus />
+    <button type="submit" class="btn primary">Unlock</button>
+    <div class="err" id="err"></div>
+  </form>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="app">
+  <div class="top"><div class="wrap topin">
+    <div class="brand">Frank Watson <span>/ Stats</span></div>
+    <div class="tools">
+      <select id="range">
+        <option value="7">Last 7 days</option>
+        <option value="30" selected>Last 30 days</option>
+        <option value="90">Last 90 days</option>
+        <option value="0">All time</option>
+      </select>
+      <button class="btn ghost" id="refresh">Refresh</button>
+      <button class="btn ghost" id="export">Export JSON</button>
+      <button class="btn ghost" id="csv">Export CSV</button>
+      <button class="btn ghost" id="import">Import</button>
+      <button class="btn ghost danger" id="reset">Reset</button>
+      <a class="btn ghost" href="index.html">← Site</a>
+    </div>
+  </div></div>
+
+  <main class="wrap">
+    <div class="note" id="scopenote"></div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid">
+      <div class="card wide">
+        <h3>Visits over time</h3>
+        <div class="hint">Page views (bars) and sessions (line) per day.</div>
+        <svg class="chart" id="ch-days" viewBox="0 0 900 190" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div class="card">
+        <h3>Top tracks clicked</h3>
+        <div class="hint">Which releases people click through to buy or stream.</div>
+        <div id="t-tracks"></div>
+      </div>
+
+      <div class="card">
+        <h3>Beatport vs Spotify</h3>
+        <div class="hint">Where the store clicks go.</div>
+        <div class="bars" id="t-stores"></div>
+        <svg class="chart" id="ch-stores" viewBox="0 0 300 150" style="height:150px;margin-top:10px"></svg>
+      </div>
+
+      <div class="card">
+        <h3>Traffic sources</h3>
+        <div class="hint">Where visitors arrived from.</div>
+        <div class="bars" id="t-ref"></div>
+      </div>
+
+      <div class="card">
+        <h3>Devices &amp; browsers</h3>
+        <div class="hint">What people are viewing on.</div>
+        <div class="bars" id="t-dev"></div>
+      </div>
+
+      <div class="card">
+        <h3>Section engagement</h3>
+        <div class="hint">How far down the page visitors actually scroll.</div>
+        <div class="bars" id="t-sec"></div>
+      </div>
+
+      <div class="card">
+        <h3>Outbound &amp; socials</h3>
+        <div class="hint">Clicks leaving the site (SoundCloud, Mixcloud, bookings…).</div>
+        <div class="bars" id="t-out"></div>
+      </div>
+
+      <div class="card">
+        <h3>Busiest hours</h3>
+        <div class="hint">Local time of the visitor.</div>
+        <svg class="chart" id="ch-hours" viewBox="0 0 900 160" preserveAspectRatio="none" style="height:160px"></svg>
+      </div>
+
+      <div class="card">
+        <h3>Languages</h3>
+        <div class="hint">Browser language of visitors.</div>
+        <div class="bars" id="t-lang"></div>
+      </div>
+
+      <div class="card wide">
+        <h3>Recent sessions</h3>
+        <div class="hint">Most recent visits recorded in this browser.</div>
+        <div id="t-recent"></div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="stamp" id="stamp"></span>
+      <span class="sp"></span>
+      <button class="btn ghost" id="logout">Lock</button>
+    </div>
+  </main>
+</div>
+
+<input type="file" id="fileinput" accept="application/json" style="display:none" />
+
+<script>
+(function () {
+  'use strict';
+
+  /* =================================================================
+     PASSWORD  —  change it by replacing the hash below.
+     Generate a new SHA-256 hash: open this page, press F12 → Console,
+     and run:  await fwHash('your-new-password')
+     Default password: trance2026
+     ================================================================= */
+  var PASS_HASH = 'c493a1ebddd87d2744a885687782a7ca71524eaa45210e9f1bc8d884b6fd6936';
+  var STORE_KEY = 'fw_stats_v1';
+
+  async function sha256(str) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+  }
+  window.fwHash = sha256;
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------------- gate ---------------- */
+  $('gateform').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var v = $('pw').value;
+    if (!v) return;
+    var h;
+    try { h = await sha256(v); }
+    catch (err) { $('err').textContent = 'Needs https:// or localhost to work.'; return; }
+    if (h === PASS_HASH) {
+      try { sessionStorage.setItem('fw_admin', '1'); } catch (e2) {}
+      open();
+    } else {
+      $('err').textContent = 'Wrong password.';
+      $('pw').value = '';
+    }
+  });
+
+  function open() { $('gate').style.display = 'none'; $('app').style.display = 'block'; render(); }
+  try { if (sessionStorage.getItem('fw_admin') === '1') open(); } catch (e) {}
+  $('logout').addEventListener('click', function () {
+    try { sessionStorage.removeItem('fw_admin'); } catch (e) {}
+    location.reload();
+  });
+
+  /* ---------------- data ---------------- */
+  function read() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || 'null') || {}; } catch (e) { return {}; }
+  }
+  function dstr(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function sortObj(o) {
+    return Object.keys(o || {}).map(function (k) { return [k, o[k]]; }).sort(function (a, b) { return b[1] - a[1]; });
+  }
+  function fmtDur(s) {
+    if (!s) return '—';
+    var m = Math.floor(s / 60), r = Math.round(s % 60);
+    return m ? m + 'm ' + r + 's' : r + 's';
+  }
+
+  /* ---------------- renderers ---------------- */
+  function bars(el, pairs, cls, max) {
+    var host = $(el);
+    if (!pairs.length) { host.innerHTML = '<div class="empty">No data yet.</div>'; return; }
+    var top = pairs[0][1] || 1;
+    host.className = 'bars';
+    host.innerHTML = pairs.slice(0, max || 8).map(function (p) {
+      return '<div class="row"><span class="nm" title="' + esc(p[0]) + '">' + esc(p[0]) + '</span>' +
+             '<span class="ct">' + p[1] + '</span>' +
+             '<span class="track"><span class="fill ' + (cls || '') + '" style="width:' + Math.max(3, p[1] / top * 100) + '%"></span></span></div>';
+    }).join('');
+  }
+
+  function tableTracks(pairs) {
+    var host = $('t-tracks');
+    if (!pairs.length) { host.innerHTML = '<div class="empty">No track clicks recorded yet.</div>'; return; }
+    host.innerHTML = '<table><thead><tr><th>Track</th><th>Store</th><th class="num" style="text-align:right">Clicks</th></tr></thead><tbody>' +
+      pairs.slice(0, 12).map(function (p) {
+        var parts = p[0].split(' :: ');
+        var store = parts[0], track = parts[1] || parts[0];
+        var cl = store === 'Beatport' ? 'bp' : 'sp';
+        return '<tr><td>' + esc(track) + '</td><td><span class="pill ' + cl + '">' + esc(store) + '</span></td>' +
+               '<td class="num">' + p[1] + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function tableRecent(list) {
+    var host = $('t-recent');
+    if (!list || !list.length) { host.innerHTML = '<div class="empty">No sessions recorded yet.</div>'; return; }
+    host.innerHTML = '<table><thead><tr><th>When</th><th>Source</th><th>Device</th><th>Browser</th><th>Page</th></tr></thead><tbody>' +
+      list.slice(0, 15).map(function (r) {
+        var d = new Date(r.t);
+        return '<tr><td>' + d.toLocaleString() + '</td><td>' + esc(r.ref || '—') + '</td><td>' +
+               esc(r.dev || '—') + '</td><td>' + esc(r.br || '—') + '</td><td>' + esc(r.path || '/') + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  function chartDays(days, n) {
+    var svg = $('ch-days'), W = 900, H = 190, pad = 26;
+    var keys = [];
+    if (n > 0) {
+      var d = new Date();
+      for (var i = n - 1; i >= 0; i--) {
+        var x = new Date(d.getTime() - i * 86400000);
+        keys.push(dstr(x));
+      }
+    } else {
+      keys = Object.keys(days).sort();
+    }
+    if (!keys.length) { svg.innerHTML = ''; return; }
+    var views = keys.map(function (k) { return (days[k] && days[k].views) || 0; });
+    var sess = keys.map(function (k) { return (days[k] && days[k].sessions) || 0; });
+    var max = Math.max(1, Math.max.apply(null, views));
+    var bw = (W - pad * 2) / keys.length;
+    var out = '';
+    for (var g = 0; g <= 4; g++) {
+      var y = pad + (H - pad * 2) * g / 4;
+      out += '<line class="gl" x1="' + pad + '" y1="' + y + '" x2="' + (W - pad) + '" y2="' + y + '"/>';
+      out += '<text x="2" y="' + (y + 3) + '">' + Math.round(max - max * g / 4) + '</text>';
+    }
+    keys.forEach(function (k, i) {
+      var h = (H - pad * 2) * views[i] / max;
+      var x = pad + i * bw + bw * 0.18, w = Math.max(2, bw * 0.64);
+      out += '<rect x="' + x.toFixed(1) + '" y="' + (H - pad - h).toFixed(1) + '" width="' + w.toFixed(1) +
+             '" height="' + Math.max(0, h).toFixed(1) + '" rx="2" fill="url(#gr)"><title>' + k + ': ' + views[i] + ' views, ' + sess[i] + ' sessions</title></rect>';
+    });
+    var pts = keys.map(function (k, i) {
+      var h = (H - pad * 2) * sess[i] / max;
+      return (pad + i * bw + bw / 2).toFixed(1) + ',' + (H - pad - h).toFixed(1);
+    }).join(' ');
+    out += '<polyline points="' + pts + '" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linejoin="round"/>';
+    var step = Math.ceil(keys.length / 8);
+    keys.forEach(function (k, i) {
+      if (i % step) return;
+      out += '<text x="' + (pad + i * bw + bw / 2).toFixed(1) + '" y="' + (H - 8) + '" text-anchor="middle">' + k.slice(5) + '</text>';
+    });
+    svg.innerHTML = '<defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#c026d3"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs>' + out;
+  }
+
+  function chartStores(stores) {
+    var svg = $('ch-stores'), bp = stores.Beatport || 0, sp = stores.Spotify || 0, tot = bp + sp;
+    if (!tot) { svg.innerHTML = ''; return; }
+    var cx = 150, cy = 72, r = 52, sw = 22;
+    var frac = bp / tot;
+    var C = 2 * Math.PI * r;
+    svg.innerHTML =
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#1ed760" stroke-width="' + sw + '"/>' +
+      '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#a5f70b" stroke-width="' + sw + '" ' +
+        'stroke-dasharray="' + (C * frac).toFixed(1) + ' ' + C.toFixed(1) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>' +
+      '<text x="' + cx + '" y="' + (cy + 2) + '" text-anchor="middle" style="font-family:Oswald;font-size:20px;fill:#ece7f5;font-weight:700">' + tot + '</text>' +
+      '<text x="' + cx + '" y="' + (cy + 16) + '" text-anchor="middle">clicks</text>' +
+      '<text x="' + cx + '" y="' + (cy + 74) + '" text-anchor="middle">' +
+        Math.round(frac * 100) + '% Beatport · ' + (100 - Math.round(frac * 100)) + '% Spotify</text>';
+  }
+
+  function chartHours(hours) {
+    var svg = $('ch-hours'), W = 900, H = 160, pad = 24;
+    var vals = [];
+    for (var h = 0; h < 24; h++) vals.push(hours[String(h)] || 0);
+    var max = Math.max(1, Math.max.apply(null, vals));
+    var bw = (W - pad * 2) / 24, out = '';
+    vals.forEach(function (v, i) {
+      var bh = (H - pad * 2) * v / max;
+      out += '<rect x="' + (pad + i * bw + bw * 0.15).toFixed(1) + '" y="' + (H - pad - bh).toFixed(1) +
+             '" width="' + (bw * 0.7).toFixed(1) + '" height="' + Math.max(1, bh).toFixed(1) +
+             '" rx="2" fill="' + (v === max && max > 0 ? '#22d3ee' : '#7c3aed') + '"><title>' + i + ':00 — ' + v + '</title></rect>';
+      if (i % 3 === 0) out += '<text x="' + (pad + i * bw + bw / 2).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle">' + i + 'h</text>';
+    });
+    svg.innerHTML = out;
+  }
+
+  /* ---------------- main render ---------------- */
+  var S = {};
+  function render() {
+    S = read();
+    var n = parseInt($('range').value, 10);
+    var days = S.days || {};
+
+    var keys = Object.keys(days);
+    var inRange = keys;
+    if (n > 0) {
+      var cut = dstr(new Date(Date.now() - (n - 1) * 86400000));
+      inRange = keys.filter(function (k) { return k >= cut; });
+    }
+    var views = inRange.reduce(function (a, k) { return a + (days[k].views || 0); }, 0);
+    var sess = inRange.reduce(function (a, k) { return a + (days[k].sessions || 0); }, 0);
+
+    var durs = S.durations || [];
+    var avg = durs.length ? Math.round(durs.reduce(function (a, b) { return a + b; }, 0) / durs.length) : 0;
+    var allClicks = Object.keys(S.stores || {}).reduce(function (a, k) { return a + S.stores[k]; }, 0);
+    // per-day click counts exist from v1.1 onwards; fall back to all-time if absent
+    var rangeClicks = inRange.reduce(function (a, k) { return a + (days[k].clicks || 0); }, 0);
+    var hasDaily = keys.some(function (k) { return days[k].clicks !== undefined; });
+    var storeClicks = hasDaily ? rangeClicks : allClicks;
+    var clickSub = hasDaily ? 'Beatport + Spotify' : 'Beatport + Spotify (all time)';
+    var ctr = sess ? Math.min(100, Math.round(storeClicks / sess * 100)) : 0;
+    var best = inRange.map(function (k) { return [k, days[k].views]; }).sort(function (a, b) { return b[1] - a[1]; })[0];
+
+    $('scopenote').innerHTML = '<b>Scope:</b> these numbers come from this browser\'s local storage, so they cover visits made ' +
+      'on <b>this device</b>. To collect stats from every visitor, set <code>endpoint</code> in <code>stats.js</code> to your own ' +
+      'collector URL — the tracker will POST the same events there. Nothing is shared with third parties and no cookies are used.';
+
+    $('kpis').innerHTML = [
+      ['Page views', views, n > 0 ? 'last ' + n + ' days' : 'all time'],
+      ['Sessions', sess, 'unique visits'],
+      ['Store clicks', storeClicks, clickSub],
+      ['Click-through', ctr + '%', 'sessions → a store'],
+      ['Avg. time on page', fmtDur(avg), durs.length + ' samples'],
+      ['Best day', best ? best[1] : 0, best ? best[0] : '—']
+    ].map(function (k) {
+      return '<div class="kpi"><div class="lab">' + k[0] + '</div><div class="val">' + esc(k[1]) + '</div><div class="sub">' + esc(k[2]) + '</div></div>';
+    }).join('');
+
+    chartDays(days, n);
+    tableTracks(sortObj(S.clicks));
+    bars('t-stores', sortObj(S.stores), 'bp', 4);
+    chartStores(S.stores || {});
+    bars('t-ref', sortObj(S.referrers), '', 8);
+
+    var dev = sortObj(S.devices).concat(sortObj(S.browsers));
+    bars('t-dev', dev, 'cy', 9);
+
+    var secNames = { hero: 'Hero', about: 'About', music: 'Music', disco: 'Discography', shows: 'Shows', contact: 'Contact' };
+    bars('t-sec', sortObj(S.sections).map(function (p) { return [secNames[p[0]] || p[0], p[1]]; }), '', 8);
+
+    var out = sortObj(S.outbound);
+    bars('t-out', out, 'sp', 8);
+    chartHours(S.hours || {});
+    bars('t-lang', sortObj(S.langs), '', 6);
+    tableRecent(S.recent);
+
+    $('stamp').textContent = 'Tracking since ' +
+      (S.firstSeen ? new Date(S.firstSeen).toLocaleDateString() : '—') +
+      ' · last activity ' + (S.lastSeen ? new Date(S.lastSeen).toLocaleString() : '—');
+  }
+
+  /* ---------------- controls ---------------- */
+  $('range').addEventListener('change', render);
+  $('refresh').addEventListener('click', render);
+
+  function download(name, text, type) {
+    var b = new Blob([text], { type: type });
+    var u = URL.createObjectURL(b);
+    var a = document.createElement('a');
+    a.href = u; a.download = name; a.click();
+    setTimeout(function () { URL.revokeObjectURL(u); }, 1000);
+  }
+
+  $('export').addEventListener('click', function () {
+    download('frank-watson-stats-' + dstr(new Date()) + '.json', JSON.stringify(read(), null, 2), 'application/json');
+  });
+
+  $('csv').addEventListener('click', function () {
+    var d = read(), lines = ['section,item,value'];
+    function push(sec, obj) { Object.keys(obj || {}).forEach(function (k) { lines.push([sec, '"' + String(k).replace(/"/g, '""') + '"', obj[k]].join(',')); }); }
+    Object.keys(d.days || {}).forEach(function (k) { lines.push(['daily', k, d.days[k].views].join(',')); });
+    push('referrer', d.referrers); push('device', d.devices); push('browser', d.browsers);
+    push('os', d.os); push('language', d.langs); push('section', d.sections);
+    push('store', d.stores); push('track_click', d.clicks); push('outbound', d.outbound);
+    download('frank-watson-stats-' + dstr(new Date()) + '.csv', lines.join('\n'), 'text/csv');
+  });
+
+  $('import').addEventListener('click', function () { $('fileinput').click(); });
+  $('fileinput').addEventListener('change', function (e) {
+    var f = e.target.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var incoming = JSON.parse(r.result);
+        var cur = read();
+        var merged = mergeStats(cur, incoming);
+        localStorage.setItem(STORE_KEY, JSON.stringify(merged));
+        render();
+        alert('Imported and merged.');
+      } catch (err) { alert('That file could not be read as stats JSON.'); }
+    };
+    r.readAsText(f);
+    e.target.value = '';
+  });
+
+  function mergeStats(a, b) {
+    var out = JSON.parse(JSON.stringify(a || {}));
+    var counters = ['referrers', 'devices', 'browsers', 'os', 'langs', 'screens', 'sections', 'clicks', 'stores', 'socials', 'outbound', 'hours', 'weekdays', 'players'];
+    counters.forEach(function (c) {
+      out[c] = out[c] || {};
+      Object.keys((b && b[c]) || {}).forEach(function (k) { out[c][k] = (out[c][k] || 0) + b[c][k]; });
+    });
+    out.days = out.days || {};
+    Object.keys((b && b.days) || {}).forEach(function (k) {
+      out.days[k] = out.days[k] || { views: 0, sessions: 0 };
+      out.days[k].views += b.days[k].views || 0;
+      out.days[k].sessions += b.days[k].sessions || 0;
+      if (b.days[k].clicks) out.days[k].clicks = (out.days[k].clicks || 0) + b.days[k].clicks;
+    });
+    out.views = (out.views || 0) + (b.views || 0);
+    out.sessions = (out.sessions || 0) + (b.sessions || 0);
+    out.durations = (out.durations || []).concat(b.durations || []).slice(-500);
+    out.recent = (out.recent || []).concat(b.recent || []).sort(function (x, y) { return y.t - x.t; }).slice(0, 300);
+    out.firstSeen = Math.min(out.firstSeen || Date.now(), b.firstSeen || Date.now());
+    out.lastSeen = Math.max(out.lastSeen || 0, b.lastSeen || 0);
+    return out;
+  }
+  window.fwMergeStats = mergeStats;
+
+  $('reset').addEventListener('click', function () {
+    if (!confirm('Delete all statistics stored in this browser? This cannot be undone.\n\nTip: export a backup first.')) return;
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    render();
+  });
+})();
+</script>
+</body>
+</html>

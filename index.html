@@ -3,15 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Frank Watson — Trance DJ &amp; Producer</title>
-<meta name="description" content="Frank Watson — Belgian trance DJ &amp; producer since 2007. Uplifting &amp; energetic trance / tech-trance. Resident DJ at X-Ray FM. Releases on Black Hole Recordings, Always Alive, Enhanced, Discover &amp; Redux." />
-<meta property="og:title" content="Frank Watson — Trance DJ &amp; Producer" />
+<title>Frank Watson - Trance DJ &amp; Producer</title>
+<meta name="description" content="Frank Watson - Belgian trance DJ &amp; producer since 2007. Uplifting &amp; energetic trance / tech-trance. Resident DJ at X-Ray FM. Releases on Black Hole Recordings, Always Alive, Enhanced, Discover &amp; Redux." />
+<meta property="og:title" content="Frank Watson - Trance DJ &amp; Producer" />
 <meta property="og:description" content="Belgian trance DJ &amp; producer. Trance is a mood." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<!-- Fonts are self-hosted locally (no external requests to Google) -->
+<link rel="preload" href="fonts/oswald-700.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
 <style>
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/oswald-400.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/oswald-500.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/oswald-600.woff2') format('woff2')}
+  @font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/oswald-700.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/inter-400.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/inter-500.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/inter-600.woff2') format('woff2')}
   :root{
     --bg:#07040d; --bg2:#120a1e; --card:#170e26;
     --purple:#a855f7; --purple2:#7c3aed; --magenta:#c026d3; --cyan:#22d3ee;
@@ -105,6 +112,23 @@
   .rel:hover{background:rgba(168,85,247,.07);transform:translateX(4px)}
   .rel .yr{font-family:'Oswald';color:var(--purple);font-weight:600;min-width:52px;font-size:15px}
   .rel .t{flex:1}.rel .t b{font-weight:600}.rel .t span{color:var(--muted);font-size:14px;display:block}
+  .rel .buy{display:flex;gap:8px;flex-shrink:0;align-self:center}
+  .sbtn{display:inline-flex;align-items:center;gap:7px;font-family:'Oswald';text-transform:uppercase;letter-spacing:.1em;
+    font-size:11px;font-weight:600;padding:8px 14px;border-radius:30px;border:1px solid var(--line);color:var(--muted);
+    background:rgba(255,255,255,.03);transition:color .2s,border-color .2s,background .2s,transform .15s,box-shadow .25s;white-space:nowrap}
+  .sbtn svg{width:15px;height:15px;fill:currentColor;flex-shrink:0}
+  .sbtn:hover{transform:translateY(-2px)}
+  .sbtn.bp:hover{color:#a5f70b;border-color:rgba(165,247,11,.55);background:rgba(165,247,11,.10);box-shadow:0 0 20px rgba(165,247,11,.22)}
+  .sbtn.sp:hover{color:#1ed760;border-color:rgba(30,215,96,.55);background:rgba(30,215,96,.10);box-shadow:0 0 20px rgba(30,215,96,.22)}
+  .sbtn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+  @media(max-width:720px){
+    .rel{flex-wrap:wrap;align-items:flex-start}
+    .rel .yr{min-width:44px}
+    .rel .t{flex:1 1 100%;order:2;padding-left:60px;margin-top:-22px}
+    .rel .buy{order:3;flex:1 1 100%;padding-left:60px;margin-top:10px}
+    .sbtn{padding:7px 12px;font-size:10px}
+  }
+  @media(max-width:380px){.rel .t,.rel .buy{padding-left:0}.rel .t{margin-top:6px}}
 
   .shows{background:var(--bg)}
   .gig{display:flex;align-items:center;gap:20px;padding:18px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap;border-radius:12px;transition:background .2s}
@@ -138,10 +162,11 @@
 <body>
 <div id="bar"></div>
 <div id="glow" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
 
 <div id="loader">
   <div class="ld-inner">
-    <img src="hero.jpg" alt="Frank Watson" class="ld-logo" />
+    <img src="hero.png" alt="Frank Watson" class="ld-logo" />
     <div class="ld-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="ld-bar"><span></span></div>
     <div class="ld-txt">Loading the vibe…</div>
@@ -161,18 +186,20 @@
 </header>
 
 <section class="hero" id="top">
+  <canvas id="shader" aria-hidden="true"></canvas>
   <canvas id="fx" aria-hidden="true"></canvas>
   <div class="grid" aria-hidden="true"></div>
   <div class="inner wrap">
     <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Frank Watson</h1>
-    <img class="logo" src="hero.jpg" alt="Frank Watson" />
+    <img class="logo" src="hero.png" alt="Frank Watson" />
     <div class="tag">Trance is a <span id="rot">mood</span>.</div>
-    <p class="sub">Belgian trance DJ &amp; producer since 2007 — uplifting &amp; energetic trance / tech-trance.</p>
+    <p class="sub">Belgian trance DJ &amp; producer since 2007 - uplifting &amp; energetic trance / tech-trance.</p>
     <div class="cta">
       <a href="#music" class="btn primary">Listen</a>
       <a href="#contact" class="btn ghost">Book Frank</a>
     </div>
   </div>
+  <div class="viz" id="viz" aria-hidden="true"></div>
   <div class="scrolldot">↓ scroll</div>
 </section>
 
@@ -188,16 +215,16 @@
     <div class="about-text reveal">
     <div class="eyebrow">Biography</div>
     <h2>Trance in his veins</h2>
-    <p>As a teenager, <strong>Frank Watson</strong> witnessed the rise of the electronic scene — and fell completely in love with trance. He started DJing in <strong>2007</strong> and has been delivering energetic, uplifting trance and tech-trance ever since, across the Benelux scene and beyond.</p>
+    <p>As a teenager, <strong>Frank Watson</strong> witnessed the rise of the electronic scene - and fell completely in love with trance. He started DJing in <strong>2007</strong> and has been delivering energetic, uplifting trance and tech-trance ever since, across the Benelux scene and beyond.</p>
     <p>As a producer he has collaborated with established names such as <strong>Ciro Visone, Fisical Project, Kriticall, Accelerator</strong> and Belgian trance legend <strong>DJ Jan</strong>, with releases on respected labels including <strong>Black Hole Recordings, Always Alive, Enhanced, Discover</strong> and <strong>Redux</strong>. His music has been picked up by shows and compilations such as Ori Uplift's <strong>Uplifting Only</strong> (world premiere of "Sun Vibration") and the legendary German <strong>D.Trance</strong> series.</p>
-    <p>His 2026 single <strong>"Sayonara" (DJ Jan vs. Frank Watson)</strong> landed on Chasing Dreams Music — part of Tiësto's <strong>Black Hole Recordings</strong> — and unreleased material is already hitting the big stage: an ID was played by <strong>Driftmoon at Luminosity 2026</strong>. Frank is also <strong>resident DJ at X-Ray FM</strong>, hosting trance every Friday and Saturday evening.</p>
+    <p>His 2026 single <strong>"Sayonara" (DJ Jan vs. Frank Watson)</strong> landed on Chasing Dreams Music - part of Tiësto's <strong>Black Hole Recordings</strong> - and unreleased material is already hitting the big stage: an ID was played by <strong>Driftmoon at Luminosity 2026</strong>. Frank is also <strong>resident DJ at X-Ray FM</strong>, hosting trance every Friday and Saturday evening.</p>
     <div class="stats">
       <div class="stat"><div class="n">Since 2007</div><div class="l">DJ &amp; producer</div></div>
       <div class="stat"><div class="n">X-Ray FM</div><div class="l">Resident DJ</div></div>
       <div class="stat"><div class="n">Trance</div><div class="l">&amp; tech-trance</div></div>
     </div>
     </div>
-    <div class="about-photo reveal"><img src="artist.jpg" alt="Frank Watson — trance DJ &amp; producer" loading="lazy" /></div>
+    <div class="about-photo reveal"><img src="artist.jpg" alt="Frank Watson - trance DJ &amp; producer" loading="lazy" /></div>
   </div>
 </section>
 
@@ -205,14 +232,16 @@
   <div class="wrap reveal">
     <div class="eyebrow">Music</div>
     <h2>Listen</h2>
-    <p style="color:var(--muted);max-width:660px;margin:-6px 0 26px;font-size:16px">New episodes of <strong style="color:var(--text)">What's On Air</strong> and <strong style="color:var(--text)">World of Tranceptum</strong>, plus my latest sets — streaming on SoundCloud &amp; Mixcloud.</p>
-    <div class="embed-frame">
+    <p style="color:var(--muted);max-width:660px;margin:-6px 0 26px;font-size:16px">New episodes of <strong style="color:var(--text)">What's On Air</strong> and <strong style="color:var(--text)">World of Tranceptum</strong>, plus my latest sets - streaming on SoundCloud &amp; Mixcloud.</p>
+    <div class="embed-frame consent-embed">
       <iframe width="100%" height="320" scrolling="no" frameborder="no" allow="autoplay" loading="lazy"
-        src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fdj_frank_watson&color=%23a855f7&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+        data-src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fdj_frank_watson&color=%23a855f7&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+      <div class="consent-cover"><p>The SoundCloud player is blocked until you accept cookies.</p><div class="cc-btns"><button type="button" class="btn ghost consent-accept">Accept &amp; load</button><a class="btn ghost" href="https://soundcloud.com/dj_frank_watson" target="_blank" rel="noopener">Open on SoundCloud</a></div></div>
     </div>
-    <div class="embed-frame">
+    <div class="embed-frame consent-embed">
       <iframe width="100%" height="180" frameborder="0" loading="lazy"
-        src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&light=0&feed=%2FDJ_Frank_Watson%2F"></iframe>
+        data-src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&light=0&feed=%2FDJ_Frank_Watson%2F"></iframe>
+      <div class="consent-cover"><p>The Mixcloud player is blocked until you accept cookies.</p><div class="cc-btns"><button type="button" class="btn ghost consent-accept">Accept &amp; load</button><a class="btn ghost" href="https://www.mixcloud.com/DJ_Frank_Watson/" target="_blank" rel="noopener">Open on Mixcloud</a></div></div>
     </div>
     <div class="cta" style="justify-content:flex-start;margin-top:6px">
       <a class="btn ghost" href="https://soundcloud.com/dj_frank_watson" target="_blank" rel="noopener">SoundCloud</a>
@@ -226,25 +255,158 @@
   <div class="wrap reveal">
     <div class="eyebrow">Singles &amp; EPs</div>
     <h2>Discography</h2>
-    <div class="rel"><div class="yr">2026</div><div class="t"><b>Sayonara</b> — with DJ Jan<span>Chasing Dreams Music (Black Hole Recordings)</span></div></div>
-    <div class="rel"><div class="yr">2021</div><div class="t"><b>Boundaries Of Life</b> — with Ciro Visone<span>State Vision</span></div></div>
-    <div class="rel"><div class="yr">2021</div><div class="t"><b>Paradise City</b> — with Ciro Visone<span>HeavensGate</span></div></div>
-    <div class="rel"><div class="yr">2021</div><div class="t"><b>Syn3rgy</b> — with Fisical Project<span>Digital Society Recordings (Enhanced)</span></div></div>
-    <div class="rel"><div class="yr">2021</div><div class="t"><b>Dark Attack</b> — with Accelerator<span>Discover Records (UK)</span></div></div>
-    <div class="rel"><div class="yr">2021</div><div class="t"><b>High Purity (Extended Mix)</b> — with Kriticall<span>Redux Digital (Redux Selection Vol. 2)</span></div></div>
-    <div class="rel"><div class="yr">2020</div><div class="t"><b>Beyond The Sky / High Purity</b> — with Kriticall<span>Redux Recordings</span></div></div>
-    <div class="rel"><div class="yr">2020</div><div class="t"><b>Dirty Pillow</b> — with Kriticall (incl. Gayax Remix)<span>Tranceform</span></div></div>
-    <div class="rel"><div class="yr">2020</div><div class="t"><b>Fast Line</b> — with Ciro Visone<span>TAR#138</span></div></div>
-    <div class="rel"><div class="yr">2020</div><div class="t"><b>Imagination</b><span>Phoenix Recordings</span></div></div>
-    <div class="rel"><div class="yr">2020</div><div class="t"><b>Detonator</b> (incl. Fisical Project Remix)<span>Tranceform</span></div></div>
-    <div class="rel"><div class="yr">2020</div><div class="t"><b>Aura / Memories</b> — with Fisical Project<span>Always Alive Recordings</span></div></div>
-    <div class="rel"><div class="yr">2019</div><div class="t"><b>Definitions</b> — with Ciro Visone<span>Discover Records (UK)</span></div></div>
-    <div class="rel"><div class="yr">2019</div><div class="t"><b>Sun Vibration</b> — with Ciro Visone<span>Levitated Music · Uplifting Only world premiere</span></div></div>
-    <div class="rel"><div class="yr">2019</div><div class="t"><b>Sunrise</b> — with Fisical Project<span>Diper Records</span></div></div>
-    <div class="rel"><div class="yr">2019</div><div class="t"><b>Over the Shades</b><span>Lifted Colors</span></div></div>
-    <div class="rel"><div class="yr">2019</div><div class="t"><b>Black Clover</b> — with Fisical Project<span>Always Alive Recordings</span></div></div>
-    <div class="rel"><div class="yr">2019</div><div class="t"><b>Centinela</b> — with Kriticall<span>Metamorph Seismic</span></div></div>
-    <div class="rel"><div class="yr">2019</div><div class="t"><b>S System</b> — with Ciro Visone<span>Discover Digital</span></div></div>
+    <div class="rel">
+      <div class="yr">2026</div>
+      <div class="t"><b>Sayonara</b> - with DJ Jan<span>Chasing Dreams Music (Black Hole Recordings)</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Sayonara+DJ+Jan" target="_blank" rel="noopener" data-track="Sayonara" data-store="Beatport" aria-label="Sayonara on Beatport" title="Buy Sayonara on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Sayonara%20DJ%20Jan" target="_blank" rel="noopener" data-track="Sayonara" data-store="Spotify" aria-label="Sayonara on Spotify" title="Play Sayonara on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2021</div>
+      <div class="t"><b>Boundaries Of Life</b> - with Ciro Visone<span>State Vision</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Boundaries+Of+Life+Ciro+Visone" target="_blank" rel="noopener" data-track="Boundaries Of Life" data-store="Beatport" aria-label="Boundaries Of Life on Beatport" title="Buy Boundaries Of Life on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Boundaries%20Of%20Life%20Ciro%20Visone" target="_blank" rel="noopener" data-track="Boundaries Of Life" data-store="Spotify" aria-label="Boundaries Of Life on Spotify" title="Play Boundaries Of Life on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2021</div>
+      <div class="t"><b>Paradise City</b> - with Ciro Visone<span>HeavensGate</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Paradise+City+Ciro+Visone" target="_blank" rel="noopener" data-track="Paradise City" data-store="Beatport" aria-label="Paradise City on Beatport" title="Buy Paradise City on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Paradise%20City%20Ciro%20Visone" target="_blank" rel="noopener" data-track="Paradise City" data-store="Spotify" aria-label="Paradise City on Spotify" title="Play Paradise City on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2021</div>
+      <div class="t"><b>Syn3rgy</b> - with Fisical Project<span>Digital Society Recordings (Enhanced)</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Syn3rgy+Fisical+Project" target="_blank" rel="noopener" data-track="Syn3rgy" data-store="Beatport" aria-label="Syn3rgy on Beatport" title="Buy Syn3rgy on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Syn3rgy%20Fisical%20Project" target="_blank" rel="noopener" data-track="Syn3rgy" data-store="Spotify" aria-label="Syn3rgy on Spotify" title="Play Syn3rgy on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2021</div>
+      <div class="t"><b>Dark Attack</b> - with Accelerator<span>Discover Records (UK)</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Dark+Attack+Accelerator" target="_blank" rel="noopener" data-track="Dark Attack" data-store="Beatport" aria-label="Dark Attack on Beatport" title="Buy Dark Attack on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Dark%20Attack%20Accelerator" target="_blank" rel="noopener" data-track="Dark Attack" data-store="Spotify" aria-label="Dark Attack on Spotify" title="Play Dark Attack on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2021</div>
+      <div class="t"><b>High Purity (Extended Mix)</b> - with Kriticall<span>Redux Digital (Redux Selection Vol. 2)</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+High+Purity+Kriticall" target="_blank" rel="noopener" data-track="High Purity (Extended Mix)" data-store="Beatport" aria-label="High Purity (Extended Mix) on Beatport" title="Buy High Purity (Extended Mix) on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20High%20Purity%20Kriticall" target="_blank" rel="noopener" data-track="High Purity (Extended Mix)" data-store="Spotify" aria-label="High Purity (Extended Mix) on Spotify" title="Play High Purity (Extended Mix) on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2020</div>
+      <div class="t"><b>Beyond The Sky / High Purity</b> - with Kriticall<span>Redux Recordings</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Beyond+The+Sky+Kriticall" target="_blank" rel="noopener" data-track="Beyond The Sky / High Purity" data-store="Beatport" aria-label="Beyond The Sky / High Purity on Beatport" title="Buy Beyond The Sky / High Purity on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Beyond%20The%20Sky%20Kriticall" target="_blank" rel="noopener" data-track="Beyond The Sky / High Purity" data-store="Spotify" aria-label="Beyond The Sky / High Purity on Spotify" title="Play Beyond The Sky / High Purity on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2020</div>
+      <div class="t"><b>Dirty Pillow</b> - with Kriticall (incl. Gayax Remix)<span>Tranceform</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Dirty+Pillow+Kriticall" target="_blank" rel="noopener" data-track="Dirty Pillow" data-store="Beatport" aria-label="Dirty Pillow on Beatport" title="Buy Dirty Pillow on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Dirty%20Pillow%20Kriticall" target="_blank" rel="noopener" data-track="Dirty Pillow" data-store="Spotify" aria-label="Dirty Pillow on Spotify" title="Play Dirty Pillow on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2020</div>
+      <div class="t"><b>Fast Line</b> - with Ciro Visone<span>TAR#138</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Fast+Line+Ciro+Visone" target="_blank" rel="noopener" data-track="Fast Line" data-store="Beatport" aria-label="Fast Line on Beatport" title="Buy Fast Line on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Fast%20Line%20Ciro%20Visone" target="_blank" rel="noopener" data-track="Fast Line" data-store="Spotify" aria-label="Fast Line on Spotify" title="Play Fast Line on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2020</div>
+      <div class="t"><b>Imagination</b><span>Phoenix Recordings</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Imagination" target="_blank" rel="noopener" data-track="Imagination" data-store="Beatport" aria-label="Imagination on Beatport" title="Buy Imagination on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Imagination" target="_blank" rel="noopener" data-track="Imagination" data-store="Spotify" aria-label="Imagination on Spotify" title="Play Imagination on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2020</div>
+      <div class="t"><b>Detonator</b> (incl. Fisical Project Remix)<span>Tranceform</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Detonator" target="_blank" rel="noopener" data-track="Detonator" data-store="Beatport" aria-label="Detonator on Beatport" title="Buy Detonator on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Detonator" target="_blank" rel="noopener" data-track="Detonator" data-store="Spotify" aria-label="Detonator on Spotify" title="Play Detonator on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2020</div>
+      <div class="t"><b>Aura / Memories</b> - with Fisical Project<span>Always Alive Recordings</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Aura+Fisical+Project" target="_blank" rel="noopener" data-track="Aura / Memories" data-store="Beatport" aria-label="Aura / Memories on Beatport" title="Buy Aura / Memories on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Aura%20Fisical%20Project" target="_blank" rel="noopener" data-track="Aura / Memories" data-store="Spotify" aria-label="Aura / Memories on Spotify" title="Play Aura / Memories on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2019</div>
+      <div class="t"><b>Definitions</b> - with Ciro Visone<span>Discover Records (UK)</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Definitions+Ciro+Visone" target="_blank" rel="noopener" data-track="Definitions" data-store="Beatport" aria-label="Definitions on Beatport" title="Buy Definitions on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Definitions%20Ciro%20Visone" target="_blank" rel="noopener" data-track="Definitions" data-store="Spotify" aria-label="Definitions on Spotify" title="Play Definitions on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2019</div>
+      <div class="t"><b>Sun Vibration</b> - with Ciro Visone<span>Levitated Music · Uplifting Only world premiere</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Sun+Vibration+Ciro+Visone" target="_blank" rel="noopener" data-track="Sun Vibration" data-store="Beatport" aria-label="Sun Vibration on Beatport" title="Buy Sun Vibration on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Sun%20Vibration%20Ciro%20Visone" target="_blank" rel="noopener" data-track="Sun Vibration" data-store="Spotify" aria-label="Sun Vibration on Spotify" title="Play Sun Vibration on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2019</div>
+      <div class="t"><b>Sunrise</b> - with Fisical Project<span>Diper Records</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Sunrise+Fisical+Project" target="_blank" rel="noopener" data-track="Sunrise" data-store="Beatport" aria-label="Sunrise on Beatport" title="Buy Sunrise on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Sunrise%20Fisical%20Project" target="_blank" rel="noopener" data-track="Sunrise" data-store="Spotify" aria-label="Sunrise on Spotify" title="Play Sunrise on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2019</div>
+      <div class="t"><b>Over the Shades</b><span>Lifted Colors</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Over+the+Shades" target="_blank" rel="noopener" data-track="Over the Shades" data-store="Beatport" aria-label="Over the Shades on Beatport" title="Buy Over the Shades on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Over%20the%20Shades" target="_blank" rel="noopener" data-track="Over the Shades" data-store="Spotify" aria-label="Over the Shades on Spotify" title="Play Over the Shades on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2019</div>
+      <div class="t"><b>Black Clover</b> - with Fisical Project<span>Always Alive Recordings</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Black+Clover+Fisical+Project" target="_blank" rel="noopener" data-track="Black Clover" data-store="Beatport" aria-label="Black Clover on Beatport" title="Buy Black Clover on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Black%20Clover%20Fisical%20Project" target="_blank" rel="noopener" data-track="Black Clover" data-store="Spotify" aria-label="Black Clover on Spotify" title="Play Black Clover on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2019</div>
+      <div class="t"><b>Centinela</b> - with Kriticall<span>Metamorph Seismic</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+Centinela+Kriticall" target="_blank" rel="noopener" data-track="Centinela" data-store="Beatport" aria-label="Centinela on Beatport" title="Buy Centinela on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20Centinela%20Kriticall" target="_blank" rel="noopener" data-track="Centinela" data-store="Spotify" aria-label="Centinela on Spotify" title="Play Centinela on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="yr">2019</div>
+      <div class="t"><b>S System</b> - with Ciro Visone<span>Discover Digital</span></div>
+      <div class="buy">
+        <a class="sbtn bp" href="https://www.beatport.com/search?q=Frank+Watson+S+System+Ciro+Visone" target="_blank" rel="noopener" data-track="S System" data-store="Beatport" aria-label="S System on Beatport" title="Buy S System on Beatport"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1 4h2v6.2l3.1-3.1 1.4 1.4-4.5 4.5a1.4 1.4 0 0 1-2 0V6Z"/></svg><span>Beatport</span></a>
+        <a class="sbtn sp" href="https://open.spotify.com/search/Frank%20Watson%20S%20System%20Ciro%20Visone" target="_blank" rel="noopener" data-track="S System" data-store="Spotify" aria-label="S System on Spotify" title="Play S System on Spotify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg><span>Spotify</span></a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -254,12 +416,12 @@
     <h2>Shows</h2>
     <div class="gig">
       <div class="date"><div class="d">FRI</div><div class="m">&amp; SAT</div></div>
-      <div class="info"><h3>Resident — X-Ray FM · What's On Air</h3><span>Trance every Friday &amp; Saturday evening · 106.8 FM / DAB+ West Flanders / x-rayfm.be</span></div>
+      <div class="info"><h3>Resident - X-Ray FM · What's On Air</h3><span>Trance every Friday &amp; Saturday evening · 106.8 FM / DAB+ West Flanders / x-rayfm.be</span></div>
       <a class="tix" href="https://www.x-rayfm.be" target="_blank" rel="noopener">Tune in</a>
     </div>
     <div class="gig">
       <div class="date"><div class="d">11</div><div class="m">Sep '26</div></div>
-      <div class="info"><h3>Raptor Shooting Club — Beernem</h3><span>DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem</span></div>
+      <div class="info"><h3>Raptor Shooting Club - Beernem</h3><span>DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem</span></div>
       <div class="tix">Info</div>
     </div>
     <div class="gig">
@@ -274,7 +436,7 @@
   <div class="wrap reveal">
     <div class="eyebrow">Booking &amp; contact</div>
     <div class="big">Book Frank for<br>your event?</div>
-    <p>Club night, festival or radio guest mix — send a message with the date, location and type of event. I'll get back to you fast.</p>
+    <p>Club night, festival or radio guest mix - send a message with the date, location and type of event. I'll get back to you fast.</p>
     <a class="btn primary" href="mailto:ccrs@telenet.be?subject=Booking%20request%20Frank%20Watson">Send a booking request</a>
     <p style="margin-top:18px;font-size:14px"><a href="mailto:ccrs@telenet.be" style="color:var(--purple)">ccrs@telenet.be</a></p>
   </div>
@@ -290,9 +452,33 @@
     <a href="https://www.x-rayfm.be" aria-label="X-Ray FM" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 4h3.2l4.8 6.4L16.8 4H20l-6.5 8.4L20 20h-3.2l-4.8-6.4L7.2 20H4l6.5-7.6Z"/></svg></a>
   </div>
   <div class="brand" style="font-family:'Oswald';letter-spacing:.16em;color:var(--text);margin-bottom:6px">FRANK WATSON</div>
-  <div>© <span id="yr"></span> Frank Watson — trance DJ &amp; producer · Belgium</div>
-  <div class="tiny">Trance is a mood.</div>
+  <div>© <span id="yr"></span> Frank Watson - trance DJ &amp; producer · Belgium</div>
+  <div class="tiny">Trance is a mood. · <a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy</a> · <span class="cookie-link" id="cookie-settings">Cookie settings</span></div>
 </footer>
+
+<div id="cookie" hidden>
+  <div class="cookie-inner">
+    <div class="cookie-txt">
+      <strong>Cookies &amp; players</strong>
+      This site embeds players from SoundCloud &amp; Mixcloud that may set cookies once loaded. No third-party analytics or tracking cookies are used - only an anonymous, cookieless visit counter stored in your own browser. Read the <a href="#" id="cookie-policy-link">cookie policy</a>.
+    </div>
+    <div class="cookie-btns">
+      <button type="button" class="btn ghost" id="cookie-decline">Decline</button>
+      <button type="button" class="btn primary" id="cookie-accept">Accept</button>
+    </div>
+  </div>
+</div>
+<div id="cookie-modal" hidden>
+  <div class="cm-box">
+    <h3>Cookie &amp; privacy notice</h3>
+    <p>This website is intentionally minimal and does <b>not</b> use advertising or third-party tracking cookies, and does not profile visitors. An anonymous, cookieless visit counter is kept in your own browser only.</p>
+    <p><b>Embedded players.</b> The Music section can embed players from <b>SoundCloud</b> and <b>Mixcloud</b>. When loaded, those third parties may set their own cookies and receive your IP address under their own privacy policies - which is why the players stay blocked until you press <b>Accept</b>.</p>
+    <p><b>Your choice.</b> "Decline" keeps the players blocked and stores only a small technical preference in your browser (local storage) so we remember your choice. You can change or withdraw it anytime via "Cookie settings" in the footer.</p>
+    <p><b>Booking e-mail.</b> If you contact us by e-mail, your message is used only to reply to your request.</p>
+    <p>Questions? <a href="mailto:ccrs@telenet.be" style="color:var(--purple)">ccrs@telenet.be</a> · <a href="privacy.html" style="color:var(--purple)">Full privacy policy</a></p>
+    <button type="button" class="btn primary cm-close" id="cm-close">Got it</button>
+  </div>
+</div>
 
 <script>
   document.getElementById('yr').textContent=new Date().getFullYear();
@@ -339,6 +525,34 @@
   @keyframes ldbar{to{width:100%}}
   .ld-txt{font-family:'Oswald';letter-spacing:.35em;font-size:12px;color:var(--muted);text-transform:uppercase}
   @media(prefers-reduced-motion:reduce){.ld-logo,.ld-eq i,.ld-bar span{animation:none}.ld-bar span{width:100%}}
+
+  /* cookie consent */
+  .consent-embed{position:relative}
+  .consent-cover{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;
+    background:linear-gradient(180deg,#170d29,#0c0716);border-radius:14px;color:var(--muted)}
+  .consent-cover p{max-width:420px;margin:0 0 14px;font-size:14px}
+  .cc-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .cc-btns .btn{padding:11px 20px;font-size:13px}
+  #cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:120;max-width:840px;margin:0 auto;
+    background:rgba(18,10,30,.97);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;
+    box-shadow:0 18px 50px rgba(0,0,0,.55);padding:18px 20px}
+  #cookie[hidden]{display:none}
+  .cookie-inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:space-between}
+  .cookie-txt{font-size:14px;color:var(--muted);flex:1;min-width:240px;line-height:1.5}
+  .cookie-txt strong{display:block;color:var(--text);font-family:'Oswald';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+  .cookie-txt a{color:var(--purple);text-decoration:underline}
+  .cookie-btns{display:flex;gap:10px;flex-wrap:wrap}
+  .cookie-btns .btn{padding:12px 26px;font-size:13px;font-weight:700}
+  #cookie-accept{color:#fff}
+  #cookie-decline{background:#4a2f7a;border-color:var(--purple);color:#fff}
+  #cookie-decline:hover{background:#5b3d94;color:#fff}
+  #cookie-modal{position:fixed;inset:0;z-index:130;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+  #cookie-modal[hidden]{display:none}
+  .cm-box{max-width:560px;background:#140a20;border:1px solid var(--line);border-radius:16px;padding:26px;color:var(--muted);font-size:14px;line-height:1.55;max-height:82vh;overflow:auto}
+  .cm-box h3{font-family:'Oswald';color:var(--text);text-transform:uppercase;margin-bottom:12px}
+  .cm-box p{margin-bottom:10px}.cm-box b{color:var(--text)}
+  .cm-close{margin-top:14px}
+  .cookie-link{color:var(--muted);text-decoration:underline;cursor:pointer}
 </style>
 <script>
 (function(){
@@ -384,7 +598,117 @@
       b.addEventListener('pointerleave',function(){b.style.transform='';});
     });
   }
+
+  // cookie consent - gate SoundCloud/Mixcloud embeds until opt-in
+  (function(){
+    var KEY='fw_consent',banner=document.getElementById('cookie');
+    function loadEmbeds(){document.querySelectorAll('iframe[data-src]').forEach(function(f){var d=f.getAttribute('data-src');if(d)f.src=d;});document.querySelectorAll('.consent-cover').forEach(function(c){c.style.display='none';});}
+    function get(){try{return localStorage.getItem(KEY);}catch(e){return null;}}
+    function set(v){try{localStorage.setItem(KEY,v);}catch(e){}if(banner)banner.hidden=true;if(v==='accepted')loadEmbeds();}
+    var v=get();
+    if(v==='accepted')loadEmbeds();
+    else if(v!=='declined'&&banner)banner.hidden=false;
+    var a=document.getElementById('cookie-accept');if(a)a.onclick=function(){set('accepted');};
+    var d=document.getElementById('cookie-decline');if(d)d.onclick=function(){set('declined');};
+    document.querySelectorAll('.consent-accept').forEach(function(b){b.onclick=function(){set('accepted');};});
+    var s=document.getElementById('cookie-settings');if(s)s.onclick=function(){if(banner)banner.hidden=false;};
+    var m=document.getElementById('cookie-modal'),pl=document.getElementById('cookie-policy-link');
+    if(pl&&m)pl.onclick=function(e){e.preventDefault();m.hidden=false;};
+    var mc=document.getElementById('cm-close');if(mc&&m)mc.onclick=function(){m.hidden=true;};
+    if(m)m.addEventListener('click',function(e){if(e.target===m)m.hidden=true;});
+  })();
 })();
 </script>
+
+<style>
+  /* flashy level 2 */
+  #shader{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  #confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+  #confetti{z-index:150}
+  .viz{position:absolute;left:0;right:0;bottom:0;height:70px;z-index:1;display:flex;align-items:flex-end;gap:3px;padding:0 6px;opacity:.75;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+  .viz i{flex:1;height:8%;border-radius:3px 3px 0 0;background:linear-gradient(var(--magenta),var(--purple2));box-shadow:0 0 8px rgba(168,85,247,.5)}
+  .btn{position:relative;overflow:hidden}
+  .btn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;
+    background:radial-gradient(120px circle at var(--bx,50%) var(--by,-40%),rgba(255,255,255,.4),transparent 55%)}
+  .btn:hover::after{opacity:1}
+  .rel{transition:transform .12s ease, background .2s}
+  @media(prefers-reduced-motion:reduce){#shader,#confetti,.viz{display:none}}
+</style>
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches, touch=matchMedia('(hover:none)').matches;
+
+  // 1. WebGL liquid-neon shader background
+  (function(){
+    if(reduce) return;
+    var c=document.getElementById('shader'); if(!c) return;
+    var gl=c.getContext('webgl')||c.getContext('experimental-webgl'); if(!gl){c.style.display='none';return;}
+    var vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}';
+    var fs='precision mediump float;uniform vec2 r;uniform float t;'+
+      'void main(){vec2 uv=gl_FragCoord.xy/r.xy;vec2 q=uv*3.0;float ti=t*0.12;'+
+      'float v=sin(q.x*1.5+ti)+sin(q.y*1.7-ti*1.1)+sin((q.x+q.y)*1.2+ti*0.7)+sin(length(q-1.5)*2.0-ti);'+
+      'v*=0.25;float m=0.5+0.5*v;'+
+      'vec3 c1=vec3(0.24,0.07,0.45);vec3 c2=vec3(0.7,0.14,0.8);vec3 c3=vec3(0.12,0.8,0.9);'+
+      'vec3 col=mix(c1,c2,smoothstep(0.2,0.75,m));col=mix(col,c3,smoothstep(0.75,1.0,m)*0.55);'+
+      'float vig=clamp(0.28+1.0*length(uv-0.5),0.0,1.0);col*=vig;col*=0.62;'+
+      'gl_FragColor=vec4(col,1.0);}';
+    function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+    var prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,vs));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){c.style.display='none';return;}
+    gl.useProgram(prog);
+    var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var pl=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(pl);gl.vertexAttribPointer(pl,2,gl.FLOAT,false,0,0);
+    var ur=gl.getUniformLocation(prog,'r'),ut=gl.getUniformLocation(prog,'t');
+    function size(){var b=c.getBoundingClientRect();var dpr=Math.min(window.devicePixelRatio||1,1.5);c.width=Math.max(1,b.width*dpr|0);c.height=Math.max(1,b.height*dpr|0);gl.viewport(0,0,c.width,c.height);}
+    size();addEventListener('resize',size,{passive:true});
+    var t0=performance.now();
+    (function loop(now){gl.uniform2f(ur,c.width,c.height);gl.uniform1f(ut,(now-t0)/1000);gl.drawArrays(gl.TRIANGLES,0,3);requestAnimationFrame(loop);})(t0);
+  })();
+
+  // 2. text scramble on section titles
+  (function(){
+    if(reduce) return;
+    var chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*/';
+    function scramble(el){var f=el.dataset.f||(el.dataset.f=el.textContent),s=performance.now(),tot=650+f.length*28;
+      (function tick(now){var p=(now-s)/tot,o='';for(var i=0;i<f.length;i++){var ch=f[i];if(ch===' '){o+=' ';continue;}o+=(p>=(i+1)/f.length)?ch:chars[(Math.random()*chars.length)|0];}el.textContent=o;if(p<1)requestAnimationFrame(tick);else el.textContent=f;})(s);}
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){scramble(e.target);io.unobserve(e.target);}});},{threshold:.5});
+    document.querySelectorAll('section h2').forEach(function(h){io.observe(h);});
+  })();
+
+  // 4. visualizer bars
+  (function(){
+    if(reduce) return;
+    var v=document.getElementById('viz'); if(!v) return; var N=52,bars=[],i;
+    for(i=0;i<N;i++){var b=document.createElement('i');v.appendChild(b);bars.push(b);}
+    var t=0;
+    (function loop(){t+=0.05;for(i=0;i<N;i++){var h=0.2+0.4*(Math.sin(i*0.5+t)*0.5+0.5)+0.35*(Math.sin(i*0.13-t*1.7)*0.5+0.5);bars[i].style.height=(8+h*56)+'px';}requestAnimationFrame(loop);})();
+  })();
+
+  // 5. confetti
+  var confettiBurst=(function(){
+    var c=document.getElementById('confetti'); if(!c) return function(){};
+    var ctx=c.getContext('2d'),ps=[],raf=null,cols=['#a855f7','#c026d3','#22d3ee','#ffffff','#7c3aed'];
+    function size(){c.width=innerWidth;c.height=innerHeight;} size(); addEventListener('resize',size,{passive:true});
+    function loop(){ctx.clearRect(0,0,c.width,c.height);for(var i=0;i<ps.length;i++){var p=ps[i];p.vy+=0.15;p.x+=p.vx;p.y+=p.vy;p.a-=0.012;p.rot+=p.vr;if(p.a<=0)continue;ctx.save();ctx.globalAlpha=Math.max(0,p.a);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);ctx.restore();}ps=ps.filter(function(p){return p.a>0&&p.y<c.height+40;});if(ps.length)raf=requestAnimationFrame(loop);else raf=null;}
+    return function(x,y){if(reduce)return;for(var i=0;i<90;i++){var a=Math.random()*6.2832,sp=3+Math.random()*7;ps.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-4,s:5+Math.random()*6,c:cols[(Math.random()*cols.length)|0],a:1,rot:Math.random()*6.28,vr:(Math.random()-0.5)*0.3});}if(!raf)raf=requestAnimationFrame(loop);};
+  })();
+  function hookConfetti(el){if(el)el.addEventListener('click',function(e){confettiBurst(e.clientX,e.clientY);});}
+  hookConfetti(document.getElementById('cookie-accept'));
+  document.querySelectorAll('a[href^="mailto:ccrs"], .cta a.ghost[href="#contact"]').forEach(hookConfetti);
+
+  // 6. discography tilt + button spotlight
+  if(!touch){
+    document.querySelectorAll('.rel').forEach(function(r){
+      r.addEventListener('pointermove',function(e){var b=r.getBoundingClientRect();var rx=((e.clientY-b.top)/b.height-0.5)*-6;var ry=((e.clientX-b.left)/b.width-0.5)*6;r.style.transform='perspective(600px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';});
+      r.addEventListener('pointerleave',function(){r.style.transform='';});
+    });
+    document.querySelectorAll('.btn').forEach(function(b){
+      b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();b.style.setProperty('--bx',(e.clientX-r.left)+'px');b.style.setProperty('--by',(e.clientY-r.top)+'px');});
+    });
+  }
+})();
+</script>
+<script src="stats.js" defer></script>
 </body>
 </html>
