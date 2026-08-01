@@ -141,6 +141,54 @@
   .gig .info span{color:var(--muted);font-size:14px}
   .gig .tix{font-family:'Oswald';text-transform:uppercase;font-size:12px;letter-spacing:.12em;color:var(--purple);border:1px solid var(--purple);padding:9px 16px;border-radius:30px;white-space:nowrap;transition:.2s}
   .gig .tix:hover{background:var(--purple);color:#fff;box-shadow:0 0 20px rgba(168,85,247,.5)}
+  .gig.past{opacity:.45}
+  .gig .tix.soon{border-color:var(--cyan);color:var(--cyan)}
+  .gig-none{color:var(--muted);font-size:14px;padding:18px 12px}
+
+  /* ---- X-Ray FM residency ---- */
+  .radio{background:linear-gradient(180deg,var(--bg),var(--bg2))}
+  .xr-head{margin-bottom:28px}
+  .xr-live{display:inline-flex;align-items:center;gap:10px;font-family:'Oswald';text-transform:uppercase;
+    letter-spacing:.14em;font-size:13px;padding:8px 16px;border-radius:30px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);margin-bottom:14px}
+  .xr-live .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex-shrink:0}
+  .xr-live.on{border-color:rgba(255,60,90,.6);color:#fff;background:rgba(255,60,90,.12)}
+  .xr-live.on .dot{background:#ff3c5a;box-shadow:0 0 0 0 rgba(255,60,90,.7);animation:pulse 1.8s infinite}
+  .xr-live.soon{border-color:rgba(34,211,238,.5)}
+  .xr-live.soon .dot{background:var(--cyan)}
+  @keyframes pulse{70%{box-shadow:0 0 0 12px rgba(255,60,90,0)}100%{box-shadow:0 0 0 0 rgba(255,60,90,0)}}
+  .xr-sub{color:var(--muted);max-width:640px;margin-bottom:18px}
+  .xr-btns{display:flex;gap:12px;flex-wrap:wrap}
+  .xr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+  .xr-load{color:var(--muted);font-size:14px;grid-column:1/-1;padding:10px 0}
+  .xr-card{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    transition:transform .2s,box-shadow .25s,border-color .2s}
+  .xr-card:hover{transform:translateY(-4px);border-color:var(--purple);box-shadow:0 14px 40px rgba(168,85,247,.28)}
+  .xr-card .art{position:relative;aspect-ratio:1/1;background:#241536;overflow:hidden}
+  .xr-card .art img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+  .xr-card:hover .art img{transform:scale(1.05)}
+  .xr-card .play{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .25s;
+    background:rgba(7,4,13,.5)}
+  .xr-card:hover .play{opacity:1}
+  .xr-card .play svg{width:44px;height:44px;fill:#fff;filter:drop-shadow(0 4px 14px rgba(0,0,0,.6))}
+  .xr-card .meta{padding:13px 15px 15px}
+  .xr-card .meta h3{font-size:14px;text-transform:uppercase;letter-spacing:.04em;line-height:1.3;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .xr-card .meta time{display:block;color:var(--muted);font-size:12px;margin-top:5px;font-family:'Oswald';letter-spacing:.1em}
+
+  /* ---- Radio history timeline ---- */
+  .rh{margin-top:56px}
+  .rh h3{font-family:'Oswald';font-size:20px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:22px;color:var(--text)}
+  .rh-list{position:relative;padding-left:26px;border-left:1px solid var(--line)}
+  .rh-item{position:relative;padding:0 0 26px 18px}
+  .rh-item:last-child{padding-bottom:4px}
+  .rh-item::before{content:"";position:absolute;left:-31px;top:6px;width:9px;height:9px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--purple)}
+  .rh-item.now::before{background:var(--purple);box-shadow:0 0 12px rgba(168,85,247,.8)}
+  .rh-item .years{font-family:'Oswald';font-size:12px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase}
+  .rh-item h4{font-size:16px;text-transform:uppercase;letter-spacing:.05em;margin:4px 0 3px}
+  .rh-item .st{color:var(--muted);font-size:14px}
+  .rh-item .st b{color:var(--text);font-weight:600}
 
   .contact{background:linear-gradient(180deg,var(--bg),var(--bg2));text-align:center;overflow:hidden}
   .contact::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 0%,rgba(168,85,247,.22),transparent 55%)}
@@ -179,7 +227,7 @@
     <ul>
       <li><a href="#about">Bio</a></li>
       <li><a href="#music">Music</a></li>
-      <li><a href="#shows">Shows</a></li>
+      <li><a href="#radio">Radio</a></li><li><a href="#shows">Shows</a></li>
       <li><a href="#contact">Booking</a></li>
     </ul>
   </nav>
@@ -410,25 +458,76 @@
   </div>
 </section>
 
+<section class="radio" id="radio">
+  <div class="wrap reveal">
+    <div class="eyebrow">Weekly residency</div>
+    <h2>X-Ray FM sessions</h2>
+
+    <div class="xr-head">
+      <div class="xr-live">
+        <span class="dot" id="xr-dot"></span>
+        <span id="xr-status">Every Friday &amp; Saturday evening</span>
+      </div>
+      <p class="xr-sub">Frank hosts a weekly trance hour on X-Ray FM &mdash; online, on <b>106.8 FM</b> and on <b>DAB+</b> across West Flanders. Every session is archived, so you can catch up any time.</p>
+      <div class="xr-btns">
+        <a class="btn primary" href="https://x-rayfm.be" target="_blank" rel="noopener" data-store="Radio" data-track="X-Ray FM live">Listen live</a>
+        <a class="btn ghost" href="https://www.mixcloud.com/DJ_Frank_Watson/" target="_blank" rel="noopener">All sessions</a>
+      </div>
+    </div>
+
+    <!-- =================================================================
+         LATEST SESSIONS
+         Filled automatically from your Mixcloud account. If Mixcloud is
+         unreachable, the fallback list further down in the page script
+         is shown instead. Nothing to maintain here.
+         ================================================================= -->
+    <div class="xr-grid" id="xr-grid">
+      <div class="xr-load">Loading latest sessions&hellip;</div>
+    </div>
+
+    <!-- =================================================================
+         RADIO HISTORY - edit the entries below to correct years/stations.
+         Newest on top. "now" class on the first item gives the glowing dot.
+         ================================================================= -->
+    <div class="rh reveal">
+      <h3>Radio history</h3>
+      <div class="rh-list">
+        <div class="rh-item now">
+          <div class="years">2025 &ndash; now</div>
+          <h4>What's On Air</h4>
+          <div class="st">Weekly residency &mdash; <b>X-Ray FM</b> &middot; 106.8 FM &amp; DAB+ West Flanders</div>
+        </div>
+        <div class="rh-item">
+          <div class="years">2016 &ndash; 2020</div>
+          <h4>World of Tranceptum</h4>
+          <div class="st">105+ sessions &mdash; residency incl. exclusives for <b>Trance Energy Radio</b></div>
+        </div>
+        <div class="rh-item">
+          <div class="years">2016 &ndash; 2020</div>
+          <h4>Tranceptum Unleashed</h4>
+          <div class="st">187 sessions &mdash; launched on <b>More Bass</b> as <i>Tranceptum Unchained</i></div>
+        </div>
+        <div class="rh-item">
+          <div class="years">2018</div>
+          <h4>Digital Uprise sessions</h4>
+          <div class="st">Live sessions &amp; label specials &mdash; <b>Digital Uprise</b></div>
+        </div>
+        <div class="rh-item">
+          <div class="years">2013 &ndash; 2016</div>
+          <h4>World of Trancelation</h4>
+          <div class="st">The original series, incl. <i>PsyWorld</i> editions</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="shows" id="shows">
   <div class="wrap reveal">
     <div class="eyebrow">Live &amp; radio</div>
     <h2>Shows</h2>
-    <div class="gig">
-      <div class="date"><div class="d">FRI</div><div class="m">&amp; SAT</div></div>
-      <div class="info"><h3>Resident - X-Ray FM · What's On Air</h3><span>Trance every Friday &amp; Saturday evening · 106.8 FM / DAB+ West Flanders / x-rayfm.be</span></div>
-      <a class="tix" href="https://www.x-rayfm.be" target="_blank" rel="noopener">Tune in</a>
-    </div>
-    <div class="gig">
-      <div class="date"><div class="d">11</div><div class="m">Sep '26</div></div>
-      <div class="info"><h3>Raptor Shooting Club - Beernem</h3><span>DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem</span></div>
-      <div class="tix">Info</div>
-    </div>
-    <div class="gig">
-      <div class="date"><div class="d">↗</div><div class="m">NL</div></div>
-      <div class="info"><h3>FSOE Amsterdam Weekender</h3><span>Quest4Trance &amp; Luminosity events · plus club &amp; event sets across the Benelux</span></div>
-      <a class="tix" href="#contact">Book</a>
-    </div>
+    <div id="gig-list"></div>
+    <p class="gig-none" id="gig-none" hidden>No dates announced right now &mdash; <a href="#contact">get in touch</a> to book Frank.</p>
   </div>
 </section>
 
@@ -444,7 +543,7 @@
 
 <footer>
   <div class="socials">
-    <a href="https://www.facebook.com/DJFrankWatson" aria-label="Facebook" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.5-1.5h1.6V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.3H7.9V13h2.3v8h3.3Z"/></svg></a>
+    <a href="https://www.facebook.com/deejayfrankwatson" aria-label="Facebook" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.5-1.5h1.6V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v2.3H7.9V13h2.3v8h3.3Z"/></svg></a>
     <a href="https://soundcloud.com/dj_frank_watson" aria-label="SoundCloud" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M1.5 14.3c-.1 0-.15.05-.16.15l-.19 1.55.19 1.51c.01.1.06.15.16.15.09 0 .14-.05.15-.15l.22-1.51-.22-1.55c-.01-.1-.06-.15-.15-.15Zm1.2-1.1c-.11 0-.17.07-.18.17l-.25 2.63.25 2.55c.01.1.07.17.18.17.1 0 .16-.07.17-.17l.28-2.55-.28-2.63c-.01-.1-.07-.17-.17-.17Zm10.2-3.5c-.42 0-.82.09-1.18.24-.24-2.73-2.53-4.88-5.33-4.88-.69 0-1.36.14-1.95.37-.23.09-.29.18-.29.36v9.62c0 .19.15.35.34.37h8.41A2.98 2.98 0 0 0 15.9 12.7a2.98 2.98 0 0 0-2.8-2.99ZM4.9 11.2c-.12 0-.2.08-.21.2l-.23 4.05.23 3.9c.01.12.09.2.21.2.11 0 .2-.08.2-.2l.26-3.9-.26-4.05c0-.12-.09-.2-.2-.2Zm1.28-.62c-.13 0-.22.09-.23.22l-.21 4.65.21 3.86c.01.13.1.22.23.22.12 0 .21-.09.22-.22l.24-3.86-.24-4.65c-.01-.13-.1-.22-.22-.22Z"/></svg></a>
     <a href="https://www.mixcloud.com/DJ_Frank_Watson/" aria-label="Mixcloud" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M20.6 13.1a3.2 3.2 0 0 0-2.3-3.08 6 6 0 0 0-11.36-1.7A4.5 4.5 0 1 0 6.5 17H19a3 3 0 0 0 1.6-3.9ZM6.5 15a2.5 2.5 0 0 1-.2-4.99l.7-.03.18-.68a4 4 0 0 1 7.72.02l.15.62.63.08A1.2 1.2 0 0 1 19 11.9V13a1 1 0 0 1-1 1Z"/></svg></a>
     <a href="https://open.spotify.com/artist/0AuOpj814IkCve8Mxj0AQU" aria-label="Spotify" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.42a.62.62 0 0 1-.86.2c-2.35-1.43-5.3-1.76-8.79-.96a.62.62 0 1 1-.28-1.2c3.82-.88 7.08-.5 9.72 1.11.3.18.39.56.21.85Zm1.23-2.73a.78.78 0 0 1-1.07.25c-2.69-1.65-6.79-2.13-9.98-1.16a.78.78 0 1 1-.45-1.5c3.64-1.1 8.15-.55 11.24 1.34.36.22.48.7.26 1.07Zm.11-2.85C14.83 8.97 9.6 8.8 6.6 9.71a.94.94 0 1 1-.55-1.8c3.44-1.04 9.22-.84 12.87 1.32a.94.94 0 0 1-.98 1.61Z"/></svg></a>
@@ -460,7 +559,7 @@
   <div class="cookie-inner">
     <div class="cookie-txt">
       <strong>Cookies &amp; players</strong>
-      This site embeds players from SoundCloud &amp; Mixcloud that may set cookies once loaded. No third-party analytics or tracking cookies are used - only an anonymous, cookieless visit counter stored in your own browser. Read the <a href="#" id="cookie-policy-link">cookie policy</a>.
+      This site embeds players from SoundCloud &amp; Mixcloud that may set cookies once loaded. Visitor statistics are cookieless and anonymous - no advertising or cross-site tracking. Read the <a href="#" id="cookie-policy-link">cookie policy</a>.
     </div>
     <div class="cookie-btns">
       <button type="button" class="btn ghost" id="cookie-decline">Decline</button>
@@ -471,7 +570,7 @@
 <div id="cookie-modal" hidden>
   <div class="cm-box">
     <h3>Cookie &amp; privacy notice</h3>
-    <p>This website is intentionally minimal and does <b>not</b> use advertising or third-party tracking cookies, and does not profile visitors. An anonymous, cookieless visit counter is kept in your own browser only.</p>
+    <p>This website is intentionally minimal and does <b>not</b> use advertising or cross-site tracking cookies, and does not profile visitors. Visitor statistics are cookieless and anonymous.</p>
     <p><b>Embedded players.</b> The Music section can embed players from <b>SoundCloud</b> and <b>Mixcloud</b>. When loaded, those third parties may set their own cookies and receive your IP address under their own privacy policies - which is why the players stay blocked until you press <b>Accept</b>.</p>
     <p><b>Your choice.</b> "Decline" keeps the players blocked and stores only a small technical preference in your browser (local storage) so we remember your choice. You can change or withdraw it anytime via "Cookie settings" in the footer.</p>
     <p><b>Booking e-mail.</b> If you contact us by e-mail, your message is used only to reply to your request.</p>
@@ -707,6 +806,188 @@
       b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();b.style.setProperty('--bx',(e.clientX-r.left)+'px');b.style.setProperty('--by',(e.clientY-r.top)+'px');});
     });
   }
+})();
+</script>
+<script>
+/* ==================================================================
+   SHOWS + X-RAY FM SESSIONS
+   ==================================================================
+   >>> TO ADD A GIG: copy one line in the GIGS list below and edit it.
+       date : 'YYYY-MM-DD'  (required, used to sort and to auto-hide)
+       name : venue / event name
+       info : the small grey line underneath
+       link : ticket or info URL - use '' for none
+       Past dates disappear on their own. Nothing else to change.
+   ================================================================== */
+(function () {
+  'use strict';
+
+  var GIGS = [
+    { date: '2026-09-11', name: 'Raptor Shooting Club - Beernem', info: 'DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem', link: '' },
+    { date: '2026-10-17', name: 'FSOE Amsterdam Weekender', info: 'Quest4Trance & Luminosity events · Amsterdam, NL', link: '' }
+    // { date: '2026-12-31', name: 'New venue', info: 'Details here', link: 'https://tickets...' },
+  ];
+
+  /* ---- residency schedule: Friday & Saturday, 21:00-22:00 Brussels ---- */
+  var SHOW_DAYS = [5, 6];      // 5 = Friday, 6 = Saturday
+  var SHOW_START = 21, SHOW_END = 22;
+
+  var MIXCLOUD_USER = 'DJ_Frank_Watson';
+  var SESSION_COUNT = 4;
+
+  // Shown if Mixcloud can't be reached. Safe to leave as is.
+  var FALLBACK = [
+    { title: 'Trance hour on X-Ray FM', url: 'https://www.mixcloud.com/DJ_Frank_Watson/', img: '', when: '' }
+  ];
+
+  function esc(t) {
+    return String(t).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ================= gigs ================= */
+  (function () {
+    var host = document.getElementById('gig-list');
+    if (!host) return;
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+
+    var upcoming = GIGS.filter(function (g) {
+      var d = new Date(g.date + 'T00:00:00');
+      return !isNaN(d) && d >= today;
+    }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+
+    // the residency always sits at the top
+    var html = '<div class="gig">' +
+      '<div class="date"><div class="d">FRI</div><div class="m">&amp; SAT</div></div>' +
+      '<div class="info"><h3>Resident - X-Ray FM</h3>' +
+      '<span>Trance every Friday &amp; Saturday evening · online, 106.8 FM &amp; DAB+ West Flanders</span></div>' +
+      '<a class="tix" href="https://x-rayfm.be" target="_blank" rel="noopener">Tune in</a></div>';
+
+    html += upcoming.map(function (g) {
+      var d = new Date(g.date + 'T00:00:00');
+      var days = Math.round((d - today) / 86400000);
+      var soon = days <= 14;
+      var label = g.link ? 'Tickets' : 'Info';
+      var btn = g.link
+        ? '<a class="tix' + (soon ? ' soon' : '') + '" href="' + esc(g.link) + '" target="_blank" rel="noopener">' + label + '</a>'
+        : '<a class="tix' + (soon ? ' soon' : '') + '" href="#contact">Info</a>';
+      var note = days === 0 ? ' · <b>tonight</b>' : (soon ? ' · in ' + days + ' days' : '');
+      return '<div class="gig"><div class="date"><div class="d">' + d.getDate() + '</div>' +
+        '<div class="m">' + months[d.getMonth()] + " '" + String(d.getFullYear()).slice(2) + '</div></div>' +
+        '<div class="info"><h3>' + esc(g.name) + '</h3><span>' + esc(g.info) + note + '</span></div>' + btn + '</div>';
+    }).join('');
+
+    host.innerHTML = html;
+    var none = document.getElementById('gig-none');
+    if (none && !upcoming.length) none.hidden = false;
+  })();
+
+  /* ================= live-now indicator ================= */
+  (function () {
+    var wrap = document.querySelector('.xr-live');
+    var txt = document.getElementById('xr-status');
+    if (!wrap || !txt) return;
+    var dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    function tick() {
+      // always evaluate in Brussels time, whatever the visitor's timezone
+      var parts, now = new Date();
+      try {
+        var f = new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Europe/Brussels', weekday: 'short', hour: 'numeric', hour12: false
+        }).formatToParts(now);
+        parts = {};
+        f.forEach(function (p) { parts[p.type] = p.value; });
+      } catch (e) { parts = null; }
+
+      var wd, hr;
+      if (parts) {
+        wd = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday);
+        hr = parseInt(parts.hour, 10);
+      } else {
+        wd = now.getDay(); hr = now.getHours();
+      }
+      if (wd < 0) { wd = now.getDay(); hr = now.getHours(); }
+
+      var onAir = SHOW_DAYS.indexOf(wd) !== -1 && hr >= SHOW_START && hr < SHOW_END;
+      wrap.classList.toggle('on', onAir);
+
+      if (onAir) {
+        txt.innerHTML = 'On air right now';
+        return;
+      }
+      // find the next show day
+      for (var i = 0; i < 8; i++) {
+        var d = (wd + i) % 7;
+        if (SHOW_DAYS.indexOf(d) === -1) continue;
+        if (i === 0 && hr >= SHOW_END) continue;
+        wrap.classList.toggle('soon', i === 0);
+        txt.textContent = (i === 0 ? 'Tonight' : (i === 1 ? 'Tomorrow' : dayNames[d])) +
+          ' · ' + SHOW_START + ':00-' + SHOW_END + ':00 CET';
+        return;
+      }
+      txt.textContent = 'Every Friday & Saturday evening';
+    }
+    tick();
+    setInterval(tick, 60000);
+  })();
+
+  /* ================= latest Mixcloud sessions ================= */
+  (function () {
+    var grid = document.getElementById('xr-grid');
+    if (!grid) return;
+
+    var PLAY = '<span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.14v13.72L19 12 8 5.14Z"/></svg></span>';
+
+    function card(it) {
+      var art = it.img
+        ? '<img src="' + esc(it.img) + '" alt="" loading="lazy" width="300" height="300" />'
+        : '';
+      return '<a class="xr-card" href="' + esc(it.url) + '" target="_blank" rel="noopener" ' +
+        'data-store="Mixcloud" data-track="' + esc(it.title) + '">' +
+        '<span class="art">' + art + PLAY + '</span>' +
+        '<span class="meta"><h3>' + esc(it.title) + '</h3>' +
+        (it.when ? '<time>' + esc(it.when) + '</time>' : '') +
+        '</span></a>';
+    }
+
+    function paint(items) {
+      grid.innerHTML = items.map(card).join('');
+    }
+
+    function fmtDate(iso) {
+      var d = new Date(iso);
+      if (isNaN(d)) return '';
+      return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    var done = false;
+    var timer = setTimeout(function () { if (!done) { done = true; paint(FALLBACK); } }, 6000);
+
+    fetch('https://api.mixcloud.com/' + MIXCLOUD_USER + '/cloudcasts/?limit=' + SESSION_COUNT)
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) {
+        if (done) return;
+        done = true; clearTimeout(timer);
+        var list = (j && j.data) || [];
+        if (!list.length) { paint(FALLBACK); return; }
+        paint(list.slice(0, SESSION_COUNT).map(function (c) {
+          return {
+            title: c.name || 'Session',
+            url: c.url || 'https://www.mixcloud.com/' + MIXCLOUD_USER + '/',
+            img: (c.pictures && (c.pictures.large || c.pictures['320wx320h'] || c.pictures.medium)) || '',
+            when: fmtDate(c.created_time)
+          };
+        }));
+      })
+      .catch(function () {
+        if (done) return;
+        done = true; clearTimeout(timer);
+        paint(FALLBACK);
+      });
+  })();
 })();
 </script>
 <script src="stats.js" defer></script>

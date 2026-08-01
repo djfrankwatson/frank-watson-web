@@ -1,18 +1,46 @@
-/* ------------------------------------------------------------------
-   Frank Watson - lightweight, cookieless visitor statistics
+/* ==================================================================
+   Frank Watson - cookieless visitor statistics
+   ==================================================================
+
+   TWO LAYERS, both cookieless:
+
+   1. LOCAL  - counters kept in the visitor's own browser, shown in
+               admin.html. Always on. Never leaves the device.
+
+   2. GOATCOUNTER - site-wide numbers from every visitor, shown on
+               your GoatCounter dashboard. OFF until you fill in your
+               site code below.
+
    ------------------------------------------------------------------
-   - Stores everything in the visitor's own browser (localStorage).
-   - No cookies, no third-party requests, no IP logging, no fingerprinting.
-   - Read the numbers in admin.html
-   - OPTIONAL: set FW.endpoint below to a URL and every event is also
-     POSTed there, so you can collect stats across all visitors.
+   >>> TO SWITCH ON SITE-WIDE STATS:
+   1. Make a free account at https://www.goatcounter.com
+      Pick a site code, e.g. "frankwatson".
+   2. Put that code between the quotes below.
+   3. Re-upload this file. Done.
    ------------------------------------------------------------------ */
+
 (function () {
   'use strict';
 
   var CONFIG = {
     key: 'fw_stats_v1',
-    endpoint: null,      // e.g. 'https://your-worker.workers.dev/collect'
+
+    // <<< YOUR GOATCOUNTER SITE CODE GOES HERE >>>
+    // '' = off.  'frankwatson' = sends to https://frankwatson.goatcounter.com
+    goatcounter: '',
+
+    // Send events (track clicks, outbound links) to GoatCounter too,
+    // not just plain page views.
+    goatcounterEvents: true,
+
+    // Set to true to hold GoatCounter back until the visitor presses
+    // "Accept" on your cookie banner. Not required - GoatCounter sets
+    // no cookies - but available if you prefer maximum caution.
+    requireConsent: false,
+
+    // Optional: your own collector URL (see the PHP option we discussed).
+    endpoint: null,
+
     maxRecent: 300,
     maxDurations: 500
   };
@@ -62,6 +90,13 @@
 
   function bump(obj, k, n) { if (!k) return; obj[k] = (obj[k] || 0) + (n || 1); }
 
+  function slug(s) {
+    return String(s).toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'x';
+  }
+
   function send(type, payload) {
     if (!CONFIG.endpoint) return;
     try {
@@ -69,6 +104,63 @@
       if (navigator.sendBeacon) navigator.sendBeacon(CONFIG.endpoint, new Blob([body], { type: 'application/json' }));
       else fetch(CONFIG.endpoint, { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'application/json' } });
     } catch (e) {}
+  }
+
+  /* ================= GoatCounter (site-wide, cookieless) ============= */
+  var GC = (function () {
+    var code = (CONFIG.goatcounter || '').trim();
+    var queue = [], ready = false, started = false;
+
+    function consented() {
+      if (!CONFIG.requireConsent) return true;
+      try { return localStorage.getItem('fw_consent') === 'accepted'; } catch (e) { return false; }
+    }
+
+    function start() {
+      if (started || !code || !consented()) return;
+      started = true;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://gc.zgo.at/count.js';
+      s.setAttribute('data-goatcounter', 'https://' + code + '.goatcounter.com/count');
+      s.onload = function () {
+        ready = true;
+        queue.splice(0).forEach(function (v) { fire(v); });
+      };
+      s.onerror = function () { queue.length = 0; }; // blocked by an ad blocker: stay silent
+      document.head.appendChild(s);
+    }
+
+    function fire(v) {
+      try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count(v); } catch (e) {}
+    }
+
+    return {
+      enabled: function () { return !!code; },
+      start: start,
+      // page view is sent automatically by count.js on load
+      event: function (path, title) {
+        if (!code || !CONFIG.goatcounterEvents) return;
+        var v = { path: String(path).replace(/^\/+/, '').slice(0, 200), title: title || '', event: true };
+        if (ready) fire(v); else if (queue.length < 40) queue.push(v);
+      },
+      // called if the visitor accepts consent later in the session
+      retry: function () { start(); }
+    };
+  })();
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', GC.start);
+  else GC.start();
+
+  // if consent is required and granted mid-session, start then
+  if (CONFIG.requireConsent) {
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t) return;
+      if ((t.id === 'cookie-accept') || (t.classList && t.classList.contains('consent-accept'))) {
+        setTimeout(GC.retry, 60);
+      }
+    }, true);
   }
 
   /* ---------- environment ---------- */
@@ -185,11 +277,16 @@
       S.days[dk].clicks = (S.days[dk].clicks || 0) + 1;
       save();
       send('store_click', { store: store, track: track });
+      GC.event(store.toLowerCase() + '-' + slug(track), store + ': ' + track);
       return;
     }
 
     var href = a.getAttribute('href') || '';
-    if (/^mailto:/.test(href)) { bump(S.outbound, 'Booking e-mail'); save(); send('mail', {}); return; }
+    if (/^mailto:/.test(href)) {
+      bump(S.outbound, 'Booking e-mail'); save(); send('mail', {});
+      GC.event('booking-email', 'Booking e-mail clicked');
+      return;
+    }
 
     if (/^https?:/.test(href)) {
       var host;
@@ -200,11 +297,13 @@
       bump(S.outbound, label + ' (' + host + ')');
       save();
       send('outbound', { host: host, label: label });
+      GC.event('out-' + slug(host), 'Outbound: ' + label);
       return;
     }
 
     if (a.classList.contains('consent-accept')) {
       bump(S.players, 'Player unlocked'); save(); send('player', {});
+      GC.event('player-unlocked', 'Embedded player unlocked');
     }
   }, true);
 
