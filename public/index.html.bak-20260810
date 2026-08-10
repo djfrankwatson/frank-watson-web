@@ -823,7 +823,6 @@
   'use strict';
 
   var GIGS = [
-    { date: '2026-09-04', name: 'X-Ray FM Party - NOX Summerbar', info: 'Retro-house accented · X-Ray FM DJ-team · free entrance, doors 19h · Oostendelaan, Middelkerke', link: 'https://www.facebook.com/events/993664390378112/', label: 'Event' },
     { date: '2026-09-11', name: 'Raptor Shooting Club - Beernem', info: 'DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem', link: '' },
     { date: '2026-10-17', name: 'FSOE Amsterdam Weekender', info: 'Quest4Trance & Luminosity events · Amsterdam, NL', link: '' }
     // { date: '2026-12-31', name: 'New venue', info: 'Details here', link: 'https://tickets...' },
@@ -870,7 +869,7 @@
       var d = new Date(g.date + 'T00:00:00');
       var days = Math.round((d - today) / 86400000);
       var soon = days <= 14;
-      var label = g.label || (g.link ? 'Tickets' : 'Info');
+      var label = g.link ? 'Tickets' : 'Info';
       var btn = g.link
         ? '<a class="tix' + (soon ? ' soon' : '') + '" href="' + esc(g.link) + '" target="_blank" rel="noopener">' + label + '</a>'
         : '<a class="tix' + (soon ? ' soon' : '') + '" href="#contact">Info</a>';
