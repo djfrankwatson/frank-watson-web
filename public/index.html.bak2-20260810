@@ -143,10 +143,6 @@
   .gig .tix:hover{background:var(--purple);color:#fff;box-shadow:0 0 20px rgba(168,85,247,.5)}
   .gig.past{opacity:.45}
   .gig .tix.soon{border-color:var(--cyan);color:var(--cyan)}
-  .gig .poster{display:block;flex:0 0 auto;width:58px;height:82px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#0b0b12;transition:.2s}
-  .gig .poster img{width:100%;height:100%;object-fit:cover;display:block}
-  .gig .poster:hover{border-color:var(--purple);box-shadow:0 0 18px rgba(168,85,247,.45);transform:translateY(-2px)}
-  @media (max-width:520px){.gig .poster{width:46px;height:65px}}
   .gig-none{color:var(--muted);font-size:14px;padding:18px 12px}
 
   /* ---- X-Ray FM residency ---- */
@@ -827,7 +823,7 @@
   'use strict';
 
   var GIGS = [
-    { date: '2026-09-04', name: 'X-Ray FM Party Nox Summerbar', info: 'Retro-house accented · X-Ray FM DJ-team · free entrance, doors 19h · Oostendelaan, Middelkerke', poster: 'poster-nox-2026-09-04.jpg', thumb: 'poster-nox-2026-09-04-thumb.jpg', link: 'poster-nox-2026-09-04.jpg', label: 'More info' },
+    { date: '2026-09-04', name: 'X-Ray FM Party - NOX Summerbar', info: 'Retro-house accented · X-Ray FM DJ-team · free entrance, doors 19h · Oostendelaan, Middelkerke', link: 'https://www.facebook.com/events/993664390378112/', label: 'Event' },
     { date: '2026-09-11', name: 'Raptor Shooting Club - Beernem', info: 'DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem', link: '' },
     { date: '2026-10-17', name: 'FSOE Amsterdam Weekender', info: 'Quest4Trance & Luminosity events · Amsterdam, NL', link: '' }
     // { date: '2026-12-31', name: 'New venue', info: 'Details here', link: 'https://tickets...' },
@@ -879,14 +875,8 @@
         ? '<a class="tix' + (soon ? ' soon' : '') + '" href="' + esc(g.link) + '" target="_blank" rel="noopener">' + label + '</a>'
         : '<a class="tix' + (soon ? ' soon' : '') + '" href="#contact">Info</a>';
       var note = days === 0 ? ' · <b>tonight</b>' : (soon ? ' · in ' + days + ' days' : '');
-      var poster = g.poster
-        ? '<a class="poster" href="' + esc(g.poster) + '" target="_blank" rel="noopener" '
-          + 'aria-label="Event poster"><img src="' + esc(g.thumb || g.poster) + '" alt="' + esc(g.name)
-          + ' poster" loading="lazy" onerror="this.parentNode.style.display=&quot;none&quot;"></a>'
-        : '';
       return '<div class="gig"><div class="date"><div class="d">' + d.getDate() + '</div>' +
         '<div class="m">' + months[d.getMonth()] + " '" + String(d.getFullYear()).slice(2) + '</div></div>' +
-        poster +
         '<div class="info"><h3>' + esc(g.name) + '</h3><span>' + esc(g.info) + note + '</span></div>' + btn + '</div>';
     }).join('');
 
