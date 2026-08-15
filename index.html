@@ -143,6 +143,16 @@
   .gig .tix:hover{background:var(--purple);color:#fff;box-shadow:0 0 20px rgba(168,85,247,.5)}
   .gig.past{opacity:.45}
   .gig .tix.soon{border-color:var(--cyan);color:var(--cyan)}
+  .shows-sub{font-family:'Oswald';text-transform:uppercase;letter-spacing:.22em;font-size:13px;color:var(--purple);margin:0 0 10px;padding-left:12px;display:flex;align-items:center;gap:14px}
+  .shows-sub::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  .shows-sub.second{margin-top:54px}
+  .shows-block{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.02);padding:4px 8px;overflow:hidden}
+  .shows-block .gig:last-child{border-bottom:none}
+  .shows-note{color:var(--muted);font-size:13px;padding:0 12px 10px}
+  .gig .poster{display:block;flex:0 0 auto;height:82px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#0b0b12;transition:.2s}
+  .gig .poster img{height:100%;width:auto;display:block}
+  .gig .poster:hover{border-color:var(--purple);box-shadow:0 0 18px rgba(168,85,247,.45);transform:translateY(-2px)}
+  @media (max-width:520px){.gig .poster{height:65px}}
   .gig-none{color:var(--muted);font-size:14px;padding:18px 12px}
 
   /* ---- X-Ray FM residency ---- */
@@ -526,8 +536,16 @@
   <div class="wrap reveal">
     <div class="eyebrow">Live &amp; radio</div>
     <h2>Shows</h2>
-    <div id="gig-list"></div>
-    <p class="gig-none" id="gig-none" hidden>No dates announced right now &mdash; <a href="#contact">get in touch</a> to book Frank.</p>
+    <h3 class="shows-sub">Live dates</h3>
+    <div class="shows-block">
+      <div id="gig-list"></div>
+      <p class="gig-none" id="gig-none" hidden>No dates announced right now &mdash; <a href="#contact">get in touch</a> to book Frank.</p>
+    </div>
+
+    <h3 class="shows-sub second">Radio residency</h3>
+    <div class="shows-block">
+      <div id="radio-list"></div>
+    </div>
   </div>
 </section>
 
@@ -823,8 +841,9 @@
   'use strict';
 
   var GIGS = [
-    { date: '2026-09-11', name: 'Raptor Shooting Club - Beernem', info: 'DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem', link: '' },
-    { date: '2026-10-17', name: 'FSOE Amsterdam Weekender', info: 'Quest4Trance & Luminosity events · Amsterdam, NL', link: '' }
+    { date: '2026-09-04', name: 'X-Ray FM Party Nox Summerbar', info: 'Retro-house accented · X-Ray FM DJ-team · free entrance, doors 19h · Oostendelaan, Middelkerke', poster: 'poster-nox-2026-09-04.jpg', thumb: 'poster-nox-2026-09-04-thumb.jpg', link: 'poster-nox-2026-09-04.jpg', label: 'More info' },
+    { date: '2026-09-11', name: 'Raptor Shooting Club - Beernem', info: 'DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem', poster: 'poster-raptor-2026-09-11.jpg', thumb: 'poster-raptor-2026-09-11-thumb.jpg', link: 'poster-raptor-2026-09-11.jpg', label: 'More info' },
+    { date: '2026-10-17', name: 'Frank turns 50 - Birthday Party', info: 'Café Den Hert, Heule · free entrance · DJ line-up to be announced', poster: 'poster-birthday-2026-10-17.jpg', thumb: 'poster-birthday-2026-10-17-thumb.jpg', link: '50.html', label: 'More info' }
     // { date: '2026-12-31', name: 'New venue', info: 'Details here', link: 'https://tickets...' },
   ];
 
@@ -858,24 +877,33 @@
       return !isNaN(d) && d >= today;
     }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
 
-    // the residency always sits at the top
-    var html = '<div class="gig">' +
-      '<div class="date"><div class="d">FRI</div><div class="m">&amp; SAT</div></div>' +
-      '<div class="info"><h3>Resident - X-Ray FM</h3>' +
-      '<span>Trance every Friday &amp; Saturday evening · online, 106.8 FM &amp; DAB+ West Flanders</span></div>' +
-      '<a class="tix" href="https://x-rayfm.be" target="_blank" rel="noopener">Tune in</a></div>';
+    // the radio residency lives in its own block, below the live dates
+    var radio = document.getElementById('radio-list');
+    if (radio) {
+      radio.innerHTML = '<div class="gig">' +
+        '<div class="date"><div class="d">FRI</div><div class="m">&amp; SAT</div></div>' +
+        '<div class="info"><h3>Resident - X-Ray FM</h3>' +
+        '<span>Trance every Friday &amp; Saturday evening · online, 106.8 FM &amp; DAB+ West Flanders</span></div>' +
+        '<a class="tix" href="https://x-rayfm.be" target="_blank" rel="noopener">Tune in</a></div>';
+    }
 
-    html += upcoming.map(function (g) {
+    var html = upcoming.map(function (g) {
       var d = new Date(g.date + 'T00:00:00');
       var days = Math.round((d - today) / 86400000);
       var soon = days <= 14;
-      var label = g.link ? 'Tickets' : 'Info';
+      var label = g.label || (g.link ? 'Tickets' : 'Info');
       var btn = g.link
         ? '<a class="tix' + (soon ? ' soon' : '') + '" href="' + esc(g.link) + '" target="_blank" rel="noopener">' + label + '</a>'
         : '<a class="tix' + (soon ? ' soon' : '') + '" href="#contact">Info</a>';
       var note = days === 0 ? ' · <b>tonight</b>' : (soon ? ' · in ' + days + ' days' : '');
+      var poster = g.poster
+        ? '<a class="poster" href="' + esc(g.poster) + '" target="_blank" rel="noopener" '
+          + 'aria-label="Event poster"><img src="' + esc(g.thumb || g.poster) + '" alt="' + esc(g.name)
+          + ' poster" loading="lazy" onerror="this.parentNode.style.display=&quot;none&quot;"></a>'
+        : '';
       return '<div class="gig"><div class="date"><div class="d">' + d.getDate() + '</div>' +
         '<div class="m">' + months[d.getMonth()] + " '" + String(d.getFullYear()).slice(2) + '</div></div>' +
+        poster +
         '<div class="info"><h3>' + esc(g.name) + '</h3><span>' + esc(g.info) + note + '</span></div>' + btn + '</div>';
     }).join('');
 
