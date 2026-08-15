@@ -143,11 +143,8 @@
   .gig .tix:hover{background:var(--purple);color:#fff;box-shadow:0 0 20px rgba(168,85,247,.5)}
   .gig.past{opacity:.45}
   .gig .tix.soon{border-color:var(--cyan);color:var(--cyan)}
-  .shows-sub{font-family:'Oswald';text-transform:uppercase;letter-spacing:.22em;font-size:13px;color:var(--purple);margin:0 0 10px;padding-left:12px;display:flex;align-items:center;gap:14px}
-  .shows-sub::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
-  .shows-sub.second{margin-top:54px}
-  .shows-block{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.02);padding:4px 8px;overflow:hidden}
-  .shows-block .gig:last-child{border-bottom:none}
+  .shows-sub{font-family:'Oswald';text-transform:uppercase;letter-spacing:.22em;font-size:13px;color:var(--purple);margin:0 0 6px;padding-left:12px}
+  .shows-sub.second{margin-top:38px}
   .shows-note{color:var(--muted);font-size:13px;padding:0 12px 10px}
   .gig .poster{display:block;flex:0 0 auto;height:82px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#0b0b12;transition:.2s}
   .gig .poster img{height:100%;width:auto;display:block}
@@ -537,15 +534,11 @@
     <div class="eyebrow">Live &amp; radio</div>
     <h2>Shows</h2>
     <h3 class="shows-sub">Live dates</h3>
-    <div class="shows-block">
-      <div id="gig-list"></div>
-      <p class="gig-none" id="gig-none" hidden>No dates announced right now &mdash; <a href="#contact">get in touch</a> to book Frank.</p>
-    </div>
+    <div id="gig-list"></div>
+    <p class="gig-none" id="gig-none" hidden>No dates announced right now &mdash; <a href="#contact">get in touch</a> to book Frank.</p>
 
     <h3 class="shows-sub second">Radio residency</h3>
-    <div class="shows-block">
-      <div id="radio-list"></div>
-    </div>
+    <div id="radio-list"></div>
   </div>
 </section>
 
@@ -843,7 +836,6 @@
   var GIGS = [
     { date: '2026-09-04', name: 'X-Ray FM Party Nox Summerbar', info: 'Retro-house accented · X-Ray FM DJ-team · free entrance, doors 19h · Oostendelaan, Middelkerke', poster: 'poster-nox-2026-09-04.jpg', thumb: 'poster-nox-2026-09-04-thumb.jpg', link: 'poster-nox-2026-09-04.jpg', label: 'More info' },
     { date: '2026-09-11', name: 'Raptor Shooting Club - Beernem', info: 'DJ set with VJ TSFX · Industriepark Noord 11, 8730 Beernem', poster: 'poster-raptor-2026-09-11.jpg', thumb: 'poster-raptor-2026-09-11-thumb.jpg', link: 'poster-raptor-2026-09-11.jpg', label: 'More info' },
-    { date: '2026-10-17', name: 'Frank turns 50 - Birthday Party', info: 'Café Den Hert, Heule · free entrance · DJ line-up to be announced', poster: 'poster-birthday-2026-10-17.jpg', thumb: 'poster-birthday-2026-10-17-thumb.jpg', link: 'poster-birthday-2026-10-17.jpg', label: 'More info' },
     { date: '2026-10-17', name: 'FSOE Amsterdam Weekender', info: 'Quest4Trance & Luminosity events · Amsterdam, NL', link: '' }
     // { date: '2026-12-31', name: 'New venue', info: 'Details here', link: 'https://tickets...' },
   ];
