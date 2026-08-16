@@ -1,0 +1,17 @@
+UPLOAD NAAR COMBELL - 7 losse bestanden, geen zip
+
+Waar: Combell Bestandsbeheer -> de map waar index.html, hero.png en de
+map fonts al staan (meestal /www of httpdocs).
+
+Doe: selecteer alle 7 bestanden hieronder en upload ze in die map.
+     Overschrijven als hij het vraagt. Geen submappen maken.
+
+  index.html                            <- vervangt de bestaande (party staat erin, FSOE eruit)
+  50.html                               <- nieuwe pagina: frankwatson.be/50.html
+  logo-50.png                           <- badge op die pagina
+  og-50.jpg                             <- voorbeeldafbeelding bij delen op WhatsApp/Facebook
+  frank-watson-50-flyer-a4.pdf          <- downloadknop op die pagina
+  poster-birthday-2026-10-17.jpg        <- poster bij de gig
+  poster-birthday-2026-10-17-thumb.jpg  <- kleine versie in de lijst
+
+Na de upload: open www.frankwatson.be en ververs met Ctrl+F5.
